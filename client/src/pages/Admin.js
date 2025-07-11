@@ -6,6 +6,7 @@ const Admin = () => {
   const [appointments, setAppointments] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [faqs, setFaqs] = useState([]);
+  const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
@@ -83,9 +84,37 @@ const Admin = () => {
         }
       ];
 
+      const mockBlogPosts = [
+        {
+          _id: '1',
+          title: 'كيفية التغلب على الاكتئاب: دليل شامل',
+          excerpt: 'اكتشف الطرق العلمية والفعالة للتغلب على الاكتئاب وتحسين صحتك النفسية.',
+          category: 'depression',
+          isPublished: true,
+          isFeatured: true,
+          views: 1250,
+          likes: 89,
+          publishedAt: '2024-01-15T10:00:00Z',
+          author: { name: 'د. أحمد محمد' }
+        },
+        {
+          _id: '2',
+          title: 'تقنيات إدارة القلق والتوتر',
+          excerpt: 'تعلم تقنيات عملية وفعالة لإدارة القلق والتوتر في حياتك اليومية.',
+          category: 'anxiety',
+          isPublished: true,
+          isFeatured: false,
+          views: 980,
+          likes: 67,
+          publishedAt: '2024-01-12T14:30:00Z',
+          author: { name: 'د. أحمد محمد' }
+        }
+      ];
+
       setAppointments(mockAppointments);
       setContacts(mockContacts);
       setFaqs(mockFaqs);
+      setBlogPosts(mockBlogPosts);
       setLoading(false);
     } catch (error) {
       console.error('Error loading data:', error);
@@ -129,6 +158,9 @@ const Admin = () => {
           break;
         case 'faq':
           setFaqs(prev => prev.filter(faq => faq._id !== id));
+          break;
+        case 'blog':
+          setBlogPosts(prev => prev.filter(post => post._id !== id));
           break;
         default:
           break;
@@ -212,6 +244,12 @@ const Admin = () => {
           onClick={() => setActiveTab('faqs')}
         >
           الأسئلة الشائعة ({faqs.length})
+        </button>
+        <button
+          className={`tab-btn ${activeTab === 'blog' ? 'active' : ''}`}
+          onClick={() => setActiveTab('blog')}
+        >
+          المدونة ({blogPosts.length})
         </button>
       </div>
 
@@ -320,6 +358,51 @@ const Admin = () => {
                     <button className="edit-btn">تعديل</button>
                     <button
                       onClick={() => deleteItem('faq', faq._id)}
+                      className="delete-btn"
+                    >
+                      حذف
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Blog Tab */}
+        {activeTab === 'blog' && (
+          <div className="blog-section">
+            <h3>إدارة المدونة</h3>
+            <button className="add-blog-btn">إضافة مقال جديد</button>
+            <div className="blog-grid">
+              {blogPosts.map(post => (
+                <div key={post._id} className="blog-card">
+                  <div className="blog-header">
+                    <h4>{post.title}</h4>
+                    <div className="blog-status">
+                      <span className={`publish-status ${post.isPublished ? 'published' : 'draft'}`}>
+                        {post.isPublished ? 'منشور' : 'مسودة'}
+                      </span>
+                      {post.isFeatured && (
+                        <span className="featured-badge">مميز</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="blog-details">
+                    <p><strong>الملخص:</strong> {post.excerpt}</p>
+                    <p><strong>الفئة:</strong> {post.category}</p>
+                    <p><strong>الكاتب:</strong> {post.author.name}</p>
+                    <p><strong>تاريخ النشر:</strong> {formatDate(post.publishedAt)}</p>
+                    <div className="blog-stats">
+                      <span><strong>المشاهدات:</strong> {post.views}</span>
+                      <span><strong>الإعجابات:</strong> {post.likes}</span>
+                    </div>
+                  </div>
+                  <div className="blog-actions">
+                    <button className="edit-btn">تعديل</button>
+                    <button className="view-btn">عرض</button>
+                    <button
+                      onClick={() => deleteItem('blog', post._id)}
                       className="delete-btn"
                     >
                       حذف

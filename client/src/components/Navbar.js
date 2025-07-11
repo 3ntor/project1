@@ -56,6 +56,13 @@ const Navbar = () => {
             الدكتور
           </Link>
           <Link 
+            to="/blog" 
+            className={`navbar-link ${isActive('/blog') ? 'active' : ''}`}
+            onClick={closeMenu}
+          >
+            المدونة
+          </Link>
+          <Link 
             to="/faq" 
             className={`navbar-link ${isActive('/faq') ? 'active' : ''}`}
             onClick={closeMenu}
