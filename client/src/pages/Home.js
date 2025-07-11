@@ -1,46 +1,64 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaUsers, FaBrain, FaShieldAlt, FaClock, FaStar } from 'react-icons/fa';
+import { useLanguage } from '../contexts/LanguageContext';
+import { t } from '../translations';
 import './Home.css';
 
 const Home = () => {
+  const { language } = useLanguage();
+  
   const features = [
     {
       icon: <FaHeart />,
-      title: 'Compassionate Care',
-      description: 'We provide warm, empathetic care in a safe and supportive environment.'
+      title: language === 'ar' ? 'رعاية متعاطفة' : 'Compassionate Care',
+      description: language === 'ar' 
+        ? 'نقدم رعاية دافئة ومتعاطفة في بيئة آمنة وداعمة.'
+        : 'We provide warm, empathetic care in a safe and supportive environment.'
     },
     {
       icon: <FaUsers />,
-      title: 'Expert Team',
-      description: 'Our licensed psychologists have years of experience in various therapeutic approaches.'
+      title: language === 'ar' ? 'فريق متخصص' : 'Expert Team',
+      description: language === 'ar'
+        ? 'أخصائيونا النفسيون المرخصون لديهم سنوات من الخبرة في مختلف النهج العلاجية.'
+        : 'Our licensed psychologists have years of experience in various therapeutic approaches.'
     },
     {
       icon: <FaBrain />,
-      title: 'Evidence-Based',
-      description: 'We use scientifically proven methods to help you achieve lasting positive change.'
+      title: language === 'ar' ? 'مبني على الأدلة' : 'Evidence-Based',
+      description: language === 'ar'
+        ? 'نستخدم طرقاً علمية مثبتة لمساعدتك في تحقيق تغيير إيجابي دائم.'
+        : 'We use scientifically proven methods to help you achieve lasting positive change.'
     },
     {
       icon: <FaShieldAlt />,
-      title: 'Confidential',
-      description: 'Your privacy and confidentiality are our top priorities.'
+      title: language === 'ar' ? 'سري' : 'Confidential',
+      description: language === 'ar'
+        ? 'خصوصيتك وسريتك هي أولوياتنا القصوى.'
+        : 'Your privacy and confidentiality are our top priorities.'
     }
   ];
 
   const testimonials = [
     {
-      name: 'Sarah Johnson',
-      text: 'Lyna Psychology helped me overcome my anxiety and find inner peace. The therapists are truly amazing.',
+      name: language === 'ar' ? 'سارة أحمد' : 'Sarah Johnson',
+      text: language === 'ar' 
+        ? 'ساعدتني عيادة نفسيتك في التغلب على القلق وإيجاد السلام الداخلي. المعالجون رائعون حقاً.'
+        : 'Nafseetak Clinic helped me overcome my anxiety and find inner peace. The therapists are truly amazing.',
       rating: 5
     },
     {
-      name: 'Michael Chen',
-      text: 'Professional, caring, and effective. I highly recommend their services for anyone seeking mental wellness.',
+      name: language === 'ar' ? 'محمد علي' : 'Michael Chen',
+      text: language === 'ar'
+        ? 'مهنيون، متعاطفون وفعالون. أنصح بشدة بخدماتهم لأي شخص يسعى للصحة النفسية.'
+        : 'Professional, caring, and effective. I highly recommend their services for anyone seeking mental wellness.',
       rating: 5
     },
     {
-      name: 'Emily Rodriguez',
-      text: 'The family therapy sessions have brought our family closer together. We\'re so grateful for their support.',
+      name: language === 'ar' ? 'فاطمة محمد' : 'Emily Rodriguez',
+      text: language === 'ar'
+        ? 'جلسات العلاج الأسري جعلت عائلتنا أقرب لبعضها. نحن ممتنون جداً لدعمهم.'
+        : 'The family therapy sessions have brought our family closer together. We\'re so grateful for their support.',
       rating: 5
     }
   ];
@@ -50,11 +68,11 @@ const Home = () => {
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
-          <h1>Your Journey to Mental Wellness Starts Here</h1>
-          <p>Professional psychological services to help you overcome challenges, heal, and thrive in life.</p>
+          <h1>{t('heroTitle', language)}</h1>
+          <p>{t('heroDescription', language)}</p>
           <div className="hero-buttons">
-            <Link to="/book-appointment" className="btn btn-primary">Book Your Session</Link>
-            <Link to="/services" className="btn btn-secondary">Learn More</Link>
+            <Link to="/book-appointment" className="btn btn-primary">{t('getStarted', language)}</Link>
+            <Link to="/services" className="btn btn-secondary">{t('learnMore', language)}</Link>
           </div>
         </div>
       </section>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { LanguageProvider } from './contexts/LanguageContext';
 import './App.css';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -16,26 +17,28 @@ import BlogPost from './pages/BlogPost';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Navbar />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/book-appointment" element={<BookAppointment />} />
-                      <Route path="/doctor" element={<DoctorProfile />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:id" element={<BlogPost />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <LanguageProvider>
+      <Router>
+        <div className="App">
+          <Navbar />
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/book-appointment" element={<BookAppointment />} />
+              <Route path="/doctor" element={<DoctorProfile />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogPost />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </LanguageProvider>
   );
 }
 
