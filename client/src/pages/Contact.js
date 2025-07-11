@@ -14,6 +14,7 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [selectedService, setSelectedService] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,6 +22,21 @@ const Contact = () => {
       [e.target.name]: e.target.value
     });
   };
+
+  // Check for selected service from localStorage on component mount
+  React.useEffect(() => {
+    const storedService = localStorage.getItem('selectedService');
+    if (storedService) {
+      const service = JSON.parse(storedService);
+      setSelectedService(service);
+      setFormData(prev => ({
+        ...prev,
+        subject: `استفسار عن خدمة: ${service.name}`,
+        message: `أريد معرفة المزيد عن خدمة ${service.name}.\n\nتفاصيل الخدمة:\n- السعر: ${service.price} جنيه\n- المدة: ${service.duration}\n\n${prev.message}`
+      }));
+      localStorage.removeItem('selectedService'); // Clear after using
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -108,6 +124,21 @@ const Contact = () => {
             <div className="contact-form-container">
               <h2>Send Us a Message</h2>
               <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+              
+              {/* Selected Service Details */}
+              {selectedService && (
+                <div className="selected-service-details">
+                  <h4>الخدمة المختارة:</h4>
+                  <div className="service-info-card">
+                    <h5>{selectedService.name}</h5>
+                    <p>{selectedService.description}</p>
+                    <div className="service-meta">
+                      <span className="service-price">السعر: {selectedService.price} جنيه</span>
+                      <span className="service-duration">المدة: {selectedService.duration}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
               
               {success && (
                 <div className="success-message">

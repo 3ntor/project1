@@ -33,6 +33,9 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/lynapsych
 app.use('/api/appointments', require('./routes/appointments'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/services', require('./routes/services'));
+app.use('/api/doctors', require('./routes/doctors'));
+app.use('/api/faqs', require('./routes/faqs'));
+app.use('/api/blog', require('./routes/blog'));
 
 // Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {

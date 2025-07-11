@@ -8,6 +8,11 @@ import Services from './pages/Services';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import BookAppointment from './pages/BookAppointment';
+import DoctorProfile from './pages/DoctorProfile';
+import FAQ from './pages/FAQ';
+import Admin from './pages/Admin';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 
 function App() {
   return (
@@ -21,6 +26,11 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/book-appointment" element={<BookAppointment />} />
+                      <Route path="/doctor" element={<DoctorProfile />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogPost />} />
           </Routes>
         </main>
         <Footer />

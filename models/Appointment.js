@@ -18,9 +18,22 @@ const appointmentSchema = new mongoose.Schema({
     trim: true
   },
   service: {
-    type: String,
-    required: true,
-    enum: ['Individual Therapy', 'Couples Therapy', 'Family Therapy', 'Child Therapy', 'Group Therapy', 'Assessment']
+    name: {
+      type: String,
+      required: true
+    },
+    description: {
+      type: String,
+      required: true
+    },
+    price: {
+      type: Number,
+      required: true
+    },
+    duration: {
+      type: String,
+      required: true
+    }
   },
   date: {
     type: Date,
