@@ -8,7 +8,12 @@ const BookAppointment = () => {
     name: '',
     email: '',
     phone: '',
-    service: '',
+    service: {
+      name: '',
+      description: '',
+      price: 0,
+      duration: ''
+    },
     date: '',
     time: '',
     message: ''
@@ -17,6 +22,7 @@ const BookAppointment = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [selectedService, setSelectedService] = useState(null);
 
   // Fallback services if API fails
   const fallbackServices = [
@@ -71,6 +77,18 @@ const BookAppointment = () => {
   ];
 
   useEffect(() => {
+    // Check if there's a selected service from localStorage
+    const storedService = localStorage.getItem('selectedService');
+    if (storedService) {
+      const service = JSON.parse(storedService);
+      setSelectedService(service);
+      setFormData(prev => ({
+        ...prev,
+        service: service
+      }));
+      localStorage.removeItem('selectedService'); // Clear after using
+    }
+
     const fetchServices = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/services');
@@ -86,10 +104,28 @@ const BookAppointment = () => {
   }, []);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    if (e.target.name === 'service') {
+      const selectedService = services.find(s => s.id === parseInt(e.target.value));
+      setFormData({
+        ...formData,
+        service: selectedService ? {
+          name: selectedService.title,
+          description: selectedService.description,
+          price: parseInt(selectedService.price.replace(/[^0-9]/g, '')),
+          duration: selectedService.duration
+        } : {
+          name: '',
+          description: '',
+          price: 0,
+          duration: ''
+        }
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -104,7 +140,12 @@ const BookAppointment = () => {
         name: '',
         email: '',
         phone: '',
-        service: '',
+        service: {
+          name: '',
+          description: '',
+          price: 0,
+          duration: ''
+        },
         date: '',
         time: '',
         message: ''
@@ -204,20 +245,20 @@ const BookAppointment = () => {
                       <select
                         id="service"
                         name="service"
-                        value={formData.service}
+                        value={formData.service.name || ''}
                         onChange={handleChange}
                         required
                       >
-                        <option value="">Select a service</option>
+                        <option value="">اختر الخدمة</option>
                         {services.map((service) => (
-                          <option key={service.id} value={service.title}>
+                          <option key={service.id} value={service.id}>
                             {service.title} - {service.price}
                           </option>
                         ))}
                       </select>
                     </div>
                     <div className="form-group">
-                      <label htmlFor="date">Preferred Date *</label>
+                      <label htmlFor="date">التاريخ المفضل *</label>
                       <input
                         type="date"
                         id="date"
@@ -229,6 +270,21 @@ const BookAppointment = () => {
                       />
                     </div>
                   </div>
+                  
+                  {/* Selected Service Details */}
+                  {formData.service.name && (
+                    <div className="selected-service-details">
+                      <h4>تفاصيل الخدمة المختارة:</h4>
+                      <div className="service-info-card">
+                        <h5>{formData.service.name}</h5>
+                        <p>{formData.service.description}</p>
+                        <div className="service-meta">
+                          <span className="service-price">السعر: {formData.service.price} جنيه</span>
+                          <span className="service-duration">المدة: {formData.service.duration}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   <div className="form-group">
                     <label htmlFor="time">Preferred Time *</label>
                     <select

@@ -8,6 +8,9 @@ import Services from './pages/Services';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import BookAppointment from './pages/BookAppointment';
+import DoctorProfile from './pages/DoctorProfile';
+import FAQ from './pages/FAQ';
+import Admin from './pages/Admin';
 
 function App() {
   return (
@@ -21,6 +24,9 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/book-appointment" element={<BookAppointment />} />
+            <Route path="/doctor" element={<DoctorProfile />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </main>
         <Footer />
