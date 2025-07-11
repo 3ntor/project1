@@ -76,6 +76,13 @@ const Navbar = () => {
           >
             إدارة الحجوزات
           </Link>
+          <Link 
+            to="/admin/contacts" 
+            className={`navbar-link admin-link ${isActive('/admin/contacts') ? 'active' : ''}`}
+            onClick={closeMenu}
+          >
+            رسائل الاتصال
+          </Link>
         </div>
         
         <div className="navbar-toggle" onClick={toggleMenu}>

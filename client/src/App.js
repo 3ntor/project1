@@ -10,6 +10,7 @@ import Contact from './pages/Contact';
 import BookAppointment from './pages/BookAppointment';
 import AdminAppointments from './pages/AdminAppointments';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminContacts from './pages/AdminContacts';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/book-appointment" element={<BookAppointment />} />
             <Route path="/admin/appointments" element={<AdminAppointments />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/contacts" element={<AdminContacts />} />
           </Routes>
         </main>
         <Footer />
