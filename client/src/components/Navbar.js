@@ -62,6 +62,20 @@ const Navbar = () => {
           >
             Book Appointment
           </Link>
+          <Link 
+            to="/admin" 
+            className={`navbar-link admin-link ${isActive('/admin') ? 'active' : ''}`}
+            onClick={closeMenu}
+          >
+            لوحة التحكم
+          </Link>
+          <Link 
+            to="/admin/appointments" 
+            className={`navbar-link admin-link ${isActive('/admin/appointments') ? 'active' : ''}`}
+            onClick={closeMenu}
+          >
+            إدارة الحجوزات
+          </Link>
         </div>
         
         <div className="navbar-toggle" onClick={toggleMenu}>

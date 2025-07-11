@@ -8,6 +8,8 @@ import Services from './pages/Services';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import BookAppointment from './pages/BookAppointment';
+import AdminAppointments from './pages/AdminAppointments';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/book-appointment" element={<BookAppointment />} />
+            <Route path="/admin/appointments" element={<AdminAppointments />} />
+            <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </main>
         <Footer />
