@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FaCalendar, FaClock, FaUser, FaPhone, FaEnvelope } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
+import Calendar from '../components/Calendar';
 import axios from 'axios';
 import './BookAppointment.css';
 
 const BookAppointment = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,6 +26,9 @@ const BookAppointment = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [selectedService, setSelectedService] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState('');
+  const [bookedSlots, setBookedSlots] = useState([]);
 
   // Fallback services if API fails
   const fallbackServices = [
@@ -103,6 +109,24 @@ const BookAppointment = () => {
     fetchServices();
   }, []);
 
+  // Handle calendar date selection
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+    setFormData(prev => ({
+      ...prev,
+      date: date.toISOString().split('T')[0]
+    }));
+  };
+
+  // Handle calendar time selection
+  const handleTimeSelect = (time) => {
+    setSelectedTime(time);
+    setFormData(prev => ({
+      ...prev,
+      time: time
+    }));
+  };
+
   const handleChange = (e) => {
     if (e.target.name === 'service') {
       const selectedService = services.find(s => s.id === parseInt(e.target.value));
@@ -171,8 +195,8 @@ const BookAppointment = () => {
       {/* Hero Section */}
       <section className="hero appointment-hero">
         <div className="container">
-          <h1>Book Your Appointment</h1>
-          <p>Take the first step towards better mental health. Schedule your therapy session today.</p>
+          <h1>احجز موعدك</h1>
+          <p>اتخذ الخطوة الأولى نحو صحة نفسية أفضل. احجز جلستك العلاجية اليوم.</p>
         </div>
       </section>
 
@@ -182,12 +206,12 @@ const BookAppointment = () => {
           <div className="appointment-content">
             {/* Form */}
             <div className="appointment-form-container">
-              <h2>Schedule Your Session</h2>
-              <p>Fill out the form below to book your appointment. We'll confirm your booking within 24 hours.</p>
+              <h2>جدولة جلستك</h2>
+              <p>املأ النموذج أدناه لحجز موعدك. سنتصل بك خلال 24 ساعة لتأكيد الحجز.</p>
               
               {success && (
                 <div className="success-message">
-                  Thank you for booking your appointment! We'll contact you soon to confirm your session.
+                  شكراً لك على حجز موعدك! سنتصل بك قريباً لتأكيد جلستك.
                 </div>
               )}
               
@@ -199,10 +223,10 @@ const BookAppointment = () => {
               
               <form onSubmit={handleSubmit} className="appointment-form">
                 <div className="form-section">
-                  <h3><FaUser /> Personal Information</h3>
+                  <h3><FaUser /> المعلومات الشخصية</h3>
                   <div className="form-row">
                     <div className="form-group">
-                      <label htmlFor="name">Full Name *</label>
+                      <label htmlFor="name">الاسم الكامل *</label>
                       <input
                         type="text"
                         id="name"
@@ -213,7 +237,7 @@ const BookAppointment = () => {
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="email">Email Address *</label>
+                      <label htmlFor="email">البريد الإلكتروني *</label>
                       <input
                         type="email"
                         id="email"
@@ -225,7 +249,7 @@ const BookAppointment = () => {
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="phone">Phone Number *</label>
+                    <label htmlFor="phone">رقم الهاتف *</label>
                     <input
                       type="tel"
                       id="phone"
@@ -238,10 +262,10 @@ const BookAppointment = () => {
                 </div>
 
                 <div className="form-section">
-                  <h3><FaCalendar /> Appointment Details</h3>
+                  <h3><FaCalendar /> تفاصيل الموعد</h3>
                   <div className="form-row">
                     <div className="form-group">
-                      <label htmlFor="service">Service Type *</label>
+                      <label htmlFor="service">نوع الخدمة *</label>
                       <select
                         id="service"
                         name="service"
@@ -256,18 +280,6 @@ const BookAppointment = () => {
                           </option>
                         ))}
                       </select>
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="date">التاريخ المفضل *</label>
-                      <input
-                        type="date"
-                        id="date"
-                        name="date"
-                        value={formData.date}
-                        onChange={handleChange}
-                        min={today}
-                        required
-                      />
                     </div>
                   </div>
                   
@@ -285,70 +297,65 @@ const BookAppointment = () => {
                       </div>
                     </div>
                   )}
-                  <div className="form-group">
-                    <label htmlFor="time">Preferred Time *</label>
-                    <select
-                      id="time"
-                      name="time"
-                      value={formData.time}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="">Select a time</option>
-                      {timeSlots.map((time) => (
-                        <option key={time} value={time}>
-                          {time}
-                        </option>
-                      ))}
-                    </select>
+
+                  {/* Calendar Section */}
+                  <div className="calendar-section">
+                    <h4>اختر التاريخ والوقت</h4>
+                    <Calendar
+                      onDateSelect={handleDateSelect}
+                      onTimeSelect={handleTimeSelect}
+                      selectedDate={selectedDate}
+                      selectedTime={selectedTime}
+                      bookedSlots={bookedSlots}
+                    />
                   </div>
                 </div>
 
                 <div className="form-section">
-                  <h3>Additional Information</h3>
+                  <h3>معلومات إضافية</h3>
                   <div className="form-group">
-                    <label htmlFor="message">Message (Optional)</label>
+                    <label htmlFor="message">رسالة (اختياري)</label>
                     <textarea
                       id="message"
                       name="message"
                       rows="4"
                       value={formData.message}
                       onChange={handleChange}
-                      placeholder="Please share any specific concerns or preferences for your session..."
+                      placeholder="يرجى مشاركة أي مخاوف أو تفضيلات محددة لجلستك..."
                     ></textarea>
                   </div>
                 </div>
                 
                 <button type="submit" className="btn btn-primary" disabled={loading}>
-                  {loading ? 'Booking...' : 'Book Appointment'}
+                  {loading ? 'جاري الحجز...' : 'احجز الموعد'}
                 </button>
               </form>
             </div>
 
             {/* Information Sidebar */}
             <div className="appointment-info">
-              <h2>What to Expect</h2>
+              <h2>ما يمكن توقعه</h2>
               <div className="info-cards">
                 <div className="info-card">
                   <div className="info-icon">📋</div>
-                  <h3>Initial Consultation</h3>
-                  <p>Your first session will include a comprehensive assessment to understand your needs and goals.</p>
+                  <h3>استشارة أولية</h3>
+                  <p>ستتضمن جلستك الأولى تقييماً شاملاً لفهم احتياجاتك وأهدافك.</p>
                 </div>
                 <div className="info-card">
                   <div className="info-icon">🤝</div>
-                  <h3>Safe Environment</h3>
-                  <p>Our clinic provides a confidential, non-judgmental space where you can feel comfortable sharing.</p>
+                  <h3>بيئة آمنة</h3>
+                  <p>يوفر عيادتنا مساحة سرية وغير قضائية حيث يمكنك الشعور بالراحة في المشاركة.</p>
                 </div>
                 <div className="info-card">
                   <div className="info-icon">📞</div>
-                  <h3>Confirmation</h3>
-                  <p>We'll contact you within 24 hours to confirm your appointment and provide additional details.</p>
+                  <h3>تأكيد الحجز</h3>
+                  <p>سنقوم بالاتصال بك خلال 24 ساعة لتأكيد موعدك وتقديم تفاصيل إضافية.</p>
                 </div>
               </div>
 
               <div className="contact-info-sidebar">
-                <h3>Need Help?</h3>
-                <p>If you have any questions about booking or our services, please don't hesitate to contact us.</p>
+                <h3>تحتاج مساعدة؟</h3>
+                <p>إذا كان لديك أي أسئلة حول الحجز أو خدماتنا، فلا تتردد في الاتصال بنا.</p>
                 <div className="contact-item">
                   <FaPhone />
                   <span>+1 (555) 123-4567</span>
