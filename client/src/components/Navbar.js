@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
+import LanguageToggle from './LanguageToggle';
 import './Navbar.css';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { t } = useTranslation();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -23,7 +26,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="container">
         <Link to="/" className="navbar-brand" onClick={closeMenu}>
-          <h2>Lyna Psychology</h2>
+          <h2>{t('navbar.brand')}</h2>
         </Link>
         
         <div className={`navbar-menu ${isOpen ? 'active' : ''}`}>
@@ -32,57 +35,58 @@ const Navbar = () => {
             className={`navbar-link ${isActive('/') ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            Home
+            {t('navbar.home')}
           </Link>
           <Link 
             to="/services" 
             className={`navbar-link ${isActive('/services') ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            Services
+            {t('navbar.services')}
           </Link>
           <Link 
             to="/about" 
             className={`navbar-link ${isActive('/about') ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            About
+            {t('navbar.about')}
           </Link>
           <Link 
             to="/doctor" 
             className={`navbar-link ${isActive('/doctor') ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            الدكتور
+            {t('navbar.doctor')}
           </Link>
           <Link 
             to="/blog" 
             className={`navbar-link ${isActive('/blog') ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            المدونة
+            {t('navbar.blog')}
           </Link>
           <Link 
             to="/faq" 
             className={`navbar-link ${isActive('/faq') ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            الأسئلة الشائعة
+            {t('navbar.faq')}
           </Link>
           <Link 
             to="/contact" 
             className={`navbar-link ${isActive('/contact') ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            Contact
+            {t('navbar.contact')}
           </Link>
           <Link 
             to="/book-appointment" 
             className="btn btn-primary"
             onClick={closeMenu}
           >
-            Book Appointment
+            {t('navbar.bookAppointment')}
           </Link>
+          <LanguageToggle />
         </div>
         
         <div className="navbar-toggle" onClick={toggleMenu}>

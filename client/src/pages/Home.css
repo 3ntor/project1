@@ -148,6 +148,12 @@
   border-left: 4px solid #667eea;
 }
 
+/* RTL Support for testimonials */
+[dir="rtl"] .testimonial-card {
+  border-left: none;
+  border-right: 4px solid #667eea;
+}
+
 .testimonial-rating {
   display: flex;
   justify-content: center;
@@ -243,8 +249,7 @@
   }
   
   .feature-card,
-  .service-card,
-  .testimonial-card {
+  .service-card {
     padding: 30px 20px;
   }
 }
