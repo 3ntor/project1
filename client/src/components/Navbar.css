@@ -58,6 +58,12 @@
   border-radius: 1px;
 }
 
+/* RTL Support for navbar */
+[dir="rtl"] .navbar-link.active::after {
+  left: auto;
+  right: 0;
+}
+
 .navbar-toggle {
   display: none;
   cursor: pointer;
@@ -82,8 +88,21 @@
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   }
 
+  /* RTL Support for mobile menu */
+  [dir="rtl"] .navbar-menu {
+    left: auto;
+    right: -100%;
+    transition: right 0.3s ease;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  }
+
   .navbar-menu.active {
     left: 0;
+  }
+
+  [dir="rtl"] .navbar-menu.active {
+    left: auto;
+    right: 0;
   }
 
   .navbar-link {

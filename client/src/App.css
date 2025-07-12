@@ -12,6 +12,16 @@ body {
   background-color: #f8f9fa;
 }
 
+/* RTL Support */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .App {
   min-height: 100vh;
   display: flex;
@@ -71,6 +81,10 @@ main {
 .section-title {
   text-align: center;
   margin-bottom: 50px;
+}
+
+[dir="rtl"] .section-title {
+  text-align: center;
 }
 
 .section-title h2 {
@@ -199,7 +213,10 @@ main {
   .section-title h2 {
     font-size: 1.8rem;
   }
-  
+}
+
+/* Button responsive */
+@media (max-width: 768px) {
   .btn {
     padding: 10px 20px;
     font-size: 14px;
