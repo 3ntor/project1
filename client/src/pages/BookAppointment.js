@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { FaCalendar, FaClock, FaUser, FaPhone, FaEnvelope } from 'react-icons/fa';
+import { FaCalendar, FaUser, FaPhone, FaEnvelope } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import Calendar from '../components/Calendar';
 import axios from 'axios';
 import './BookAppointment.css';
 
 const BookAppointment = () => {
-  const { t } = useTranslation();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',

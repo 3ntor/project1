@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { FaChevronLeft, FaChevronRight, FaCheck, FaTimes } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import './Calendar.css';
 
 const Calendar = ({ onDateSelect, onTimeSelect, selectedDate, selectedTime, bookedSlots = [] }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [availableDates, setAvailableDates] = useState([]);
+
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
 
