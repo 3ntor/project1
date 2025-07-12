@@ -9,6 +9,14 @@ export const translations = {
     faq: 'الأسئلة الشائعة',
     contact: 'اتصل بنا',
     bookAppointment: 'احجز موعد',
+    scheduleSession: 'جدولة الجلسة',
+    selectDateAndTime: 'اختر التاريخ والوقت المناسب لك',
+    fillFormToBook: 'املأ النموذج أدناه لحجز موعدك. سنؤكد حجزك خلال 24 ساعة',
+    checkAvailability: 'تحقق من التوفر',
+    available: 'متاح',
+    unavailable: 'غير متاح',
+    selected: 'مختار',
+    noAvailableSlots: 'لا توجد أوقات متاحة',
     admin: 'الأدمن',
     
     // Clinic Name
@@ -220,6 +228,14 @@ export const translations = {
     faq: 'FAQ',
     contact: 'Contact',
     bookAppointment: 'Book Appointment',
+    scheduleSession: 'Schedule Your Session',
+    selectDateAndTime: 'Select your preferred date and time',
+    fillFormToBook: 'Fill out the form below to book your appointment. We\'ll confirm your booking within 24 hours',
+    checkAvailability: 'Check Availability',
+    available: 'Available',
+    unavailable: 'Unavailable',
+    selected: 'Selected',
+    noAvailableSlots: 'No available slots',
     admin: 'Admin',
     
     // Clinic Name

@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { LanguageProvider } from './contexts/LanguageContext';
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import './App.css';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -19,7 +19,17 @@ function App() {
   return (
     <LanguageProvider>
       <Router>
-        <div className="App">
+        <AppContent />
+      </Router>
+    </LanguageProvider>
+  );
+}
+
+function AppContent() {
+  const { isRTL } = useLanguage();
+  
+  return (
+    <div className="App" dir={isRTL ? 'rtl' : 'ltr'}>
           <Navbar />
           <main>
             <Routes>

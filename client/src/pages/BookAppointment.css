@@ -6,9 +6,31 @@
 /* Appointment Content */
 .appointment-content {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 50px;
-  margin-top: 50px;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.calendar-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.calendar-section h2 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.calendar-section p {
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.6;
 }
 
 /* Appointment Form */
@@ -256,7 +278,11 @@
 @media (max-width: 768px) {
   .appointment-content {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 2rem;
+  }
+  
+  .calendar-section {
+    padding: 1.5rem;
   }
   
   .appointment-form-container {

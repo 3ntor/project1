@@ -23,7 +23,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar">
+    <nav className="navbar" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="container">
         <Link to="/" className="navbar-brand" onClick={closeMenu}>
           <h2>{t('clinicName', language)}</h2>

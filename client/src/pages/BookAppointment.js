@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { FaCalendar, FaClock, FaUser, FaPhone, FaEnvelope } from 'react-icons/fa';
+import { FaCalendar, FaClock, FaUser, FaPhone, FaEnvelope, FaCheck } from 'react-icons/fa';
+import { useLanguage } from '../contexts/LanguageContext';
+import { t } from '../translations';
+import Calendar from '../components/Calendar';
 import axios from 'axios';
 import './BookAppointment.css';
 
 const BookAppointment = () => {
+  const { language } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,6 +27,13 @@ const BookAppointment = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [selectedService, setSelectedService] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState('');
+  const [bookedDates] = useState([
+    '2024-01-20',
+    '2024-01-22',
+    '2024-01-25'
+  ]); // Mock booked dates
 
   // Fallback services if API fails
   const fallbackServices = [
@@ -128,6 +139,22 @@ const BookAppointment = () => {
     }
   };
 
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+    setFormData(prev => ({
+      ...prev,
+      date: date.toISOString().split('T')[0]
+    }));
+  };
+
+  const handleTimeSelect = (time) => {
+    setSelectedTime(time);
+    setFormData(prev => ({
+      ...prev,
+      time: time
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -180,10 +207,22 @@ const BookAppointment = () => {
       <section className="section">
         <div className="container">
           <div className="appointment-content">
+            {/* Calendar Section */}
+            <div className="calendar-section">
+              <h2>{t('bookAppointment', language)}</h2>
+              <p>{t('selectDateAndTime', language)}</p>
+              
+              <Calendar 
+                onDateSelect={handleDateSelect}
+                selectedDate={selectedDate}
+                bookedDates={bookedDates}
+              />
+            </div>
+
             {/* Form */}
             <div className="appointment-form-container">
-              <h2>Schedule Your Session</h2>
-              <p>Fill out the form below to book your appointment. We'll confirm your booking within 24 hours.</p>
+              <h2>{t('scheduleSession', language)}</h2>
+              <p>{t('fillFormToBook', language)}</p>
               
               {success && (
                 <div className="success-message">
