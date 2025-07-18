@@ -1,204 +1,254 @@
-# Lyna Psychology Clinic Website
+# Nafsyetak Psychology Clinic Website
 
-A modern, responsive website for a psychology clinic built with React.js, Node.js, Express.js, and MongoDB.
+A full-stack bilingual (Arabic/English) psychology clinic website built with React.js, Node.js, Express.js, and MongoDB.
 
-## Features
+## 🌟 Features
 
-- **Modern Design**: Beautiful, responsive design with smooth animations
-- **Appointment Booking**: Online appointment booking system
-- **Service Management**: Display and manage psychological services
-- **Contact Forms**: Contact and inquiry forms with email notifications
-- **Responsive Layout**: Works perfectly on desktop, tablet, and mobile devices
-- **Admin Dashboard**: Manage appointments and contact messages
-- **MongoDB Database**: Store appointments, contacts, and services data
+### 🔐 User Authentication & Authorization
+- **Guest Users**: Can browse all public pages (Home, Services, Blog, Doctor, Contact, FAQs)
+- **Registered Users**: Can book appointments and view their own bookings
+- **Admin**: Full system access with dashboard for managing users, bookings, and blog posts
 
-## Tech Stack
+### 🌍 Bilingual Support
+- **Arabic (RTL)** and **English (LTR)** language support
+- Dynamic language switching with i18next
+- Proper RTL/LTR layout adjustments
+- Localized content for all pages
+
+### 📱 Pages & Components
+
+#### Public Pages
+- **Home Page**: Introduction, services overview, testimonials, and call-to-action
+- **Services Page**: 5 psychological therapy services with detailed descriptions
+- **Doctor Page**: Professional profile, certifications, and biography
+- **Blog Page**: Mental health articles and resources
+- **FAQ Page**: Common questions about mental health and services
+- **Contact Page**: Contact form and clinic information
+
+#### User-Specific Pages
+- **Booking Page**: Appointment scheduling with service selection and time slots
+- **Login/Signup**: User authentication with role-based access
+
+#### Admin Features
+- **Admin Dashboard**: Statistics and system overview
+- **User Management**: View and manage all registered users
+- **Booking Management**: View, confirm, or cancel all appointments
+- **Blog Management**: Create, edit, and delete blog posts
+
+### 🎨 Design Features
+- **Modern UI/UX**: Clean, professional design with gradient backgrounds
+- **Responsive Design**: Mobile-first approach with full responsiveness
+- **RTL/LTR Support**: Proper layout adjustments for both languages
+- **Accessibility**: WCAG compliant design principles
+
+## 🛠️ Tech Stack
 
 ### Frontend
-- **React.js** - Modern UI library
+- **React.js** - UI framework
 - **React Router** - Client-side routing
-- **Axios** - HTTP client for API calls
-- **React Icons** - Beautiful icon library
-- **CSS3** - Modern styling with animations
+- **React i18next** - Internationalization
+- **Axios** - HTTP client
+- **CSS3** - Styling with modern features
 
 ### Backend
-- **Node.js** - JavaScript runtime
+- **Node.js** - Runtime environment
 - **Express.js** - Web framework
-- **MongoDB** - NoSQL database
-- **Mongoose** - MongoDB object modeling
-- **CORS** - Cross-origin resource sharing
-- **Helmet** - Security middleware
-- **Rate Limiting** - API protection
+- **MongoDB** - Database
+- **Mongoose** - ODM for MongoDB
+- **JWT** - Authentication
+- **bcryptjs** - Password hashing
 
-## Installation
+### Development Tools
+- **Concurrently** - Run multiple commands
+- **Nodemon** - Development server
+- **Helmet** - Security middleware
+- **CORS** - Cross-origin resource sharing
+
+## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js (v14 or higher)
-- MongoDB (local or cloud)
+- MongoDB (local or cloud instance)
 - npm or yarn
 
-### Backend Setup
+### Installation
 
-1. **Install dependencies**
-   ```bash
-   npm install
-   ```
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd nafsyetak-clinic
+```
 
-2. **Environment Variables**
-   Create a `.env` file in the root directory:
-   ```env
-   NODE_ENV=development
-   PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/lynapsychology
-   ```
+2. **Install backend dependencies**
+```bash
+npm install
+```
 
-3. **Start MongoDB**
-   Make sure MongoDB is running on your system.
+3. **Install frontend dependencies**
+```bash
+cd client
+npm install --legacy-peer-deps
+cd ..
+```
 
-4. **Start the server**
-   ```bash
-   npm run server
-   ```
+4. **Environment Setup**
+Create a `.env` file in the root directory:
+```env
+NODE_ENV=development
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/nafsyetak-clinic
+JWT_SECRET=your-super-secret-jwt-key-here-make-it-long-and-secure
+JWT_EXPIRE=7d
 
-### Frontend Setup
+# Admin credentials
+ADMIN_EMAIL=admin@nafsyetak.com
+ADMIN_PASSWORD=admin123
 
-1. **Navigate to client directory**
-   ```bash
-   cd client
-   ```
+# Email configuration (optional)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+```
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**
-   ```bash
-   npm start
-   ```
-
-### Running Both (Development)
-
-From the root directory:
+5. **Start the development server**
 ```bash
 npm run dev
 ```
 
 This will start both the backend server (port 5000) and frontend development server (port 3000).
 
-## Project Structure
+### Default Admin Account
+- **Email**: admin@nafsyetak.com
+- **Password**: admin123
 
+## 📚 API Documentation
+
+### Authentication Routes
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `POST /api/auth/admin/login` - Admin login
+
+### Booking Routes
+- `POST /api/bookings` - Create new booking (authenticated users)
+- `GET /api/bookings/my-bookings` - Get user's bookings
+- `GET /api/bookings/all` - Get all bookings (admin only)
+- `GET /api/bookings/available-times/:date` - Get available time slots
+- `PATCH /api/bookings/:id` - Update booking status
+- `DELETE /api/bookings/:id` - Delete booking
+
+### Admin Routes
+- `GET /api/admin/dashboard/stats` - Dashboard statistics
+- `GET /api/admin/users` - Get all users
+- `GET /api/admin/bookings` - Get all bookings with pagination
+- `PATCH /api/admin/bookings/:id/status` - Update booking status
+- `DELETE /api/admin/users/:id` - Delete user
+- `GET /api/admin/users/search` - Search users
+- `GET /api/admin/bookings/search` - Search bookings
+
+### Other Routes
+- `GET /api/health` - Health check
+- `GET /api/blog` - Get blog posts
+- `GET /api/services` - Get services
+- `GET /api/faqs` - Get FAQs
+- `POST /api/contact` - Send contact message
+
+## 🎯 Key Features Implementation
+
+### Role-Based Access Control (RBAC)
+- **Guests**: Public pages only
+- **Users**: Public pages + booking functionality
+- **Admin**: Full system access
+
+### Booking System
+- Service selection from 5 therapy types
+- Date and time slot selection
+- Real-time availability checking
+- Booking status management (pending, confirmed, cancelled)
+
+### Multilingual Support
+- Dynamic language switching
+- RTL/LTR layout support
+- Localized content with i18next
+- Arabic and English translations
+
+### Security Features
+- JWT authentication
+- Password hashing with bcrypt
+- Rate limiting
+- CORS configuration
+- Helmet security headers
+
+## 📱 Services Offered
+
+1. **Individual Therapy** (60 min - 500 EGP)
+2. **Couples Therapy** (90 min - 800 EGP)
+3. **Family Therapy** (90 min - 750 EGP)
+4. **Anxiety Treatment** (60 min - 550 EGP)
+5. **Depression Therapy** (60 min - 550 EGP)
+
+## 🔧 Development Scripts
+
+```bash
+# Start both frontend and backend
+npm run dev
+
+# Start backend only
+npm run server
+
+# Start frontend only
+npm run client
+
+# Build for production
+npm run build
+
+# Install client dependencies
+npm run install-client
 ```
-lynapsychology-clone/
-├── client/                 # React frontend
-│   ├── public/
-│   ├── src/
-│   │   ├── components/     # Reusable components
-│   │   ├── pages/         # Page components
-│   │   ├── App.js
-│   │   └── index.js
-│   └── package.json
-├── models/                 # MongoDB models
-│   ├── Appointment.js
-│   └── Contact.js
-├── routes/                 # API routes
-│   ├── appointments.js
-│   ├── contact.js
-│   └── services.js
-├── server.js              # Express server
-├── package.json
-└── README.md
+
+## 🌐 Deployment
+
+### Production Build
+```bash
+npm run build
 ```
 
-## API Endpoints
+### Environment Variables for Production
+Update the `.env` file with production values:
+- Set `NODE_ENV=production`
+- Use production MongoDB URI
+- Update CORS origins
+- Set secure JWT secret
 
-### Appointments
-- `GET /api/appointments` - Get all appointments
-- `POST /api/appointments` - Create new appointment
-- `PATCH /api/appointments/:id` - Update appointment status
-- `DELETE /api/appointments/:id` - Delete appointment
+### Deployment Platforms
+- **Heroku**: Use provided `heroku-postbuild` script
+- **Vercel**: Deploy frontend separately
+- **DigitalOcean**: Use PM2 for process management
+- **AWS**: Use EC2 with nginx reverse proxy
 
-### Contact
-- `GET /api/contact` - Get all contact messages
-- `POST /api/contact` - Submit contact form
-- `DELETE /api/contact/:id` - Delete contact message
-
-### Services
-- `GET /api/services` - Get all services
-- `GET /api/services/:id` - Get specific service
-
-## Pages
-
-1. **Home** (`/`) - Landing page with hero section, features, and testimonials
-2. **Services** (`/services`) - Display all psychological services
-3. **About** (`/about`) - Team information and clinic details
-4. **Contact** (`/contact`) - Contact form and information
-5. **Book Appointment** (`/book-appointment`) - Appointment booking form
-
-## Features in Detail
-
-### Appointment Booking System
-- Select service type
-- Choose preferred date and time
-- Personal information collection
-- Form validation
-- Success/error handling
-
-### Contact Management
-- Contact form with validation
-- Message storage in database
-- Admin access to view messages
-
-### Service Management
-- Display services with pricing
-- Service descriptions and durations
-- Dynamic service loading from API
-
-### Responsive Design
-- Mobile-first approach
-- Tablet and desktop optimization
-- Smooth animations and transitions
-
-## Deployment
-
-### Backend Deployment (Heroku)
-1. Create Heroku app
-2. Set environment variables
-3. Deploy using Git:
-   ```bash
-   git push heroku main
-   ```
-
-### Frontend Deployment (Netlify/Vercel)
-1. Build the project:
-   ```bash
-   cd client
-   npm run build
-   ```
-2. Deploy the `build` folder to your hosting service
-
-## Contributing
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support
+## 🙏 Acknowledgments
 
-For support and questions, please contact:
-- Email: info@lynapsychology.com
-- Phone: +1 (555) 123-4567
+- React.js community for excellent documentation
+- i18next for internationalization support
+- MongoDB for flexible data storage
+- All contributors who helped improve this project
 
-## Screenshots
+## 📞 Support
 
-[Add screenshots of your application here]
+For support, email support@nafsyetak.com or create an issue in the repository.
 
 ---
 
-**Note**: This is a clone/educational project. For production use, ensure proper security measures, data validation, and error handling are implemented.
+**Nafsyetak Psychology Clinic** - Your journey to mental wellness starts here. 🌟

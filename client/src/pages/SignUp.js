@@ -1,126 +1,160 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import './Auth.css';
+import './SignUp.css';
 
 const SignUp = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { signup, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    confirmPassword: '',
     phone: ''
   });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { register } = useAuth();
+
+  const currentLanguage = i18n.language;
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    setError('');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setError('');
 
-    if (!formData.email || !formData.password || !formData.confirmPassword || !formData.name) {
-      setError(t('signup.error.required'));
+    // Validation
+    if (!formData.name || !formData.email || !formData.password || !formData.phone) {
+      setError(t('auth.signup.errors.required'));
+      setLoading(false);
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      setError(t('signup.error.passwordMismatch'));
+    if (formData.password.length < 6) {
+      setError('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+      setLoading(false);
       return;
     }
 
-    // إرسال بيانات التسجيل إلى الخادم
     try {
-      await register({
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        phone: formData.phone
-      });
-      // مسح حقول النموذج
-      setFormData({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        phone: ''
-      });
-      navigate('/login');
+      const result = await signup(formData);
+      
+      if (result.success) {
+        navigate('/');
+      } else {
+        setError(result.message || 'حدث خطأ أثناء إنشاء الحساب');
+      }
     } catch (error) {
-      setError(error.message || t('signup.error.server'));
+      console.error('Signup error:', error);
+      setError('حدث خطأ أثناء إنشاء الحساب');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-box signup-box">
-        <h2>{t('signup.title')}</h2>
-        
-        {error && <div className="error-message">{error}</div>}
-
-        <form onSubmit={handleSubmit} className="signup-form">
-          <div className="form-group">
-            <label>{t('signup.name')}</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              required
-            />
+    <div className={`signup-page ${currentLanguage === 'ar' ? 'rtl' : 'ltr'}`}>
+      <div className="signup-container">
+        <div className="signup-card">
+          <div className="signup-header">
+            <h2>{t('auth.signup.title')}</h2>
           </div>
 
-          <div className="form-group">
-            <label>{t('signup.email')}</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              required
-            />
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="signup-form">
+            <div className="form-group">
+              <label htmlFor="name">{t('auth.signup.name')}</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                placeholder={t('auth.signup.name')}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="email">{t('auth.signup.email')}</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                placeholder={t('auth.signup.email')}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="phone">{t('auth.signup.phone')}</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                placeholder={t('auth.signup.phone')}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">{t('auth.signup.password')}</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                placeholder={t('auth.signup.password')}
+                minLength="6"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="signup-button"
+              disabled={loading}
+            >
+              {loading ? t('common.loading') : t('auth.signup.submit')}
+            </button>
+          </form>
+
+          <div className="signup-footer">
+            <p>
+              {t('auth.signup.haveAccount')}{' '}
+              <Link to="/login" className="login-link">
+                {t('auth.signup.login')}
+              </Link>
+            </p>
           </div>
-
-          <div className="form-group">
-            <label>{t('signup.phone')}</label>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>{t('signup.password')}</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>{t('signup.confirmPassword')}</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-              required
-            />
-          </div>
-
-          <button type="submit" className="btn btn-primary">{t('Submit')}</button>
-        </form>
-
-        <p className="login-link">
-          {t('alreadyHaveAccount')} <Link to="/login">{t('login.title')}</Link>
-        </p>
+        </div>
       </div>
     </div>
   );

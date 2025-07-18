@@ -1,69 +1,90 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
+import { FaFacebook, FaInstagram, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 import './Footer.css';
 
 const Footer = () => {
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+
   return (
-    <footer className="footer">
-      <div className="container">
+    <footer className={`footer ${currentLanguage === 'ar' ? 'rtl' : 'ltr'}`}>
+      <div className="footer-container">
         <div className="footer-content">
+          {/* Brand and Description */}
           <div className="footer-section">
-            <h3>Nafsiatak</h3>
-            <p>Providing professional psychological services to help you achieve mental wellness and personal growth.</p>
-            <div className="social-links">
-              <a href="#" className="social-link"><FaFacebook /></a>
-              <a href="#" className="social-link"><FaTwitter /></a>
-              <a href="#" className="social-link"><FaInstagram /></a>
-              <a href="#" className="social-link"><FaLinkedin /></a>
+            <h3 className="footer-brand">{t('footer.brand')}</h3>
+            <p className="footer-description">
+              {t('footer.description')}
+            </p>
+            <div className="social-media">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-link">
+                <FaFacebook />
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-link">
+                <FaInstagram />
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-link">
+                <FaLinkedin />
+              </a>
             </div>
           </div>
-          
+
+          {/* Quick Links */}
           <div className="footer-section">
-            <h4>Quick Links</h4>
-            <ul>
-              <li><Link to="/">Home</Link></li>
-              <li><Link to="/services">Services</Link></li>
-              <li><Link to="/about">About</Link></li>
-              <li><Link to="/contact">Contact</Link></li>
-              <li><Link to="/book-appointment">Book Appointment</Link></li>
+            <h4 className="footer-title">{t('footer.quickLinks')}</h4>
+            <ul className="footer-links">
+              <li><Link to="/" className="footer-link">{t('navbar.home')}</Link></li>
+              <li><Link to="/services" className="footer-link">{t('navbar.services')}</Link></li>
+              <li><Link to="/doctor" className="footer-link">{t('navbar.doctor')}</Link></li>
+              <li><Link to="/blog" className="footer-link">{t('navbar.blog')}</Link></li>
+              <li><Link to="/faq" className="footer-link">{t('navbar.faq')}</Link></li>
+              <li><Link to="/contact" className="footer-link">{t('navbar.contact')}</Link></li>
             </ul>
           </div>
-          
+
+          {/* Contact Information */}
           <div className="footer-section">
-            <h4>Services</h4>
-            <ul>
-              <li>Individual Therapy</li>
-              <li>Couples Therapy</li>
-              <li>Family Therapy</li>
-              <li>Child Therapy</li>
-              <li>Group Therapy</li>
-              <li>Assessment</li>
-            </ul>
-          </div>
-          
-          <div className="footer-section">
-            <h4>Contact Info</h4>
+            <h4 className="footer-title">{t('footer.contactInfo')}</h4>
             <div className="contact-info">
               <div className="contact-item">
-                <FaPhone />
-                <span>+1 (555) 123-4567</span>
+                <FaMapMarkerAlt className="contact-icon" />
+                <span>{t('footer.address')}</span>
               </div>
               <div className="contact-item">
-                <FaEnvelope />
-                <span>info@lynapsychology.com</span>
+                <FaPhone className="contact-icon" />
+                <div>
+                  <div>{t('footer.phone')}</div>
+                  <div>+20 987 654 3210</div>
+                </div>
               </div>
               <div className="contact-item">
-                <FaMapMarkerAlt />
-                <span>123 Therapy Street, Wellness City, WC 12345</span>
+                <FaEnvelope className="contact-icon" />
+                <span>{t('footer.email')}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Working Hours */}
+          <div className="footer-section">
+            <h4 className="footer-title">{t('contact.info.hours.title')}</h4>
+            <div className="working-hours">
+              <div className="hours-item">
+                <span>{t('contact.info.hours.weekdays')}</span>
+              </div>
+              <div className="hours-item">
+                <span>{t('contact.info.hours.weekend')}</span>
               </div>
             </div>
           </div>
         </div>
-        
+
+        {/* Copyright */}
         <div className="footer-bottom">
-          <p>&copy; 2024 Nafsiatak. All rights reserved.</p>
-          <p>Professional psychological services for mental wellness</p>
+          <div className="copyright">
+            <p>{t('footer.copyright')}</p>
+          </div>
         </div>
       </div>
     </footer>

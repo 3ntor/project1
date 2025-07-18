@@ -104,7 +104,7 @@ router.post('/admin/login', async (req, res) => {
     console.log('Login attempt:', { email });
 
     // التحقق من وجود المدير
-    const admin = await Admin.findOne({ email: 'admin@gmail.com' });
+    const admin = await Admin.findOne({ email: process.env.ADMIN_EMAIL || 'admin@nafsyetak.com' });
     if (!admin) {
       console.log('Admin account not found');
       return res.status(401).json({ message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
