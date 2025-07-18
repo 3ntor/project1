@@ -18,6 +18,11 @@ const bookingSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  service: {
+    type: String,
+    required: true,
+    enum: ['individual', 'couples', 'family', 'anxiety', 'depression']
+  },
   date: {
     type: Date,
     required: true
@@ -25,6 +30,10 @@ const bookingSchema = new mongoose.Schema({
   time: {
     type: String,
     required: true
+  },
+  notes: {
+    type: String,
+    default: ''
   },
   status: {
     type: String,
@@ -39,5 +48,7 @@ const bookingSchema = new mongoose.Schema({
 
 // فهرسة للبحث السريع
 bookingSchema.index({ date: 1, time: 1 });
+bookingSchema.index({ user: 1 });
+bookingSchema.index({ status: 1 });
 
 module.exports = mongoose.model('Booking', bookingSchema);

@@ -1,103 +1,98 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import { useAuth } from '../contexts/AuthContext';
 import LanguageToggle from './LanguageToggle';
 import './Navbar.css';
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { user, isAdmin, logout, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+    setIsMenuOpen(false);
+  };
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsMenuOpen(!isMenuOpen);
   };
 
   const closeMenu = () => {
-    setIsOpen(false);
+    setIsMenuOpen(false);
   };
 
-  const isActive = (path) => {
-    return location.pathname === path;
-  };
+  const currentLanguage = i18n.language;
 
   return (
-    <nav className="navbar">
-      <div className="container">
-        <div className="navbar-brand-container">
-          <Link to="/" className="navbar-brand" onClick={closeMenu}>
-            <h2>Nafsiatak</h2>
-          </Link>
-        </div>
-        
-        <div className={`navbar-menu ${isOpen ? 'active' : ''}`}>
-          <Link 
-            to="/" 
-            className={`navbar-link ${isActive('/') ? 'active' : ''}`}
-            onClick={closeMenu}
-          >
+    <nav className={`navbar ${currentLanguage === 'ar' ? 'rtl' : 'ltr'}`}>
+      <div className="nav-container">
+        <Link to="/" className="nav-brand" onClick={closeMenu}>
+          {t('navbar.brand')}
+        </Link>
+
+        <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
+          <Link to="/" className="nav-link" onClick={closeMenu}>
             {t('navbar.home')}
           </Link>
-          <Link 
-            to="/services" 
-            className={`navbar-link ${isActive('/services') ? 'active' : ''}`}
-            onClick={closeMenu}
-          >
+          <Link to="/services" className="nav-link" onClick={closeMenu}>
             {t('navbar.services')}
           </Link>
-          <Link 
-            to="/about" 
-            className={`navbar-link ${isActive('/about') ? 'active' : ''}`}
-            onClick={closeMenu}
-          >
-            {t('navbar.about')}
-          </Link>
-          <Link 
-            to="/doctor" 
-            className={`navbar-link ${isActive('/doctor') ? 'active' : ''}`}
-            onClick={closeMenu}
-          >
+          <Link to="/doctor" className="nav-link" onClick={closeMenu}>
             {t('navbar.doctor')}
           </Link>
-          <Link 
-            to="/blog" 
-            className={`navbar-link ${isActive('/blog') ? 'active' : ''}`}
-            onClick={closeMenu}
-          >
+          <Link to="/blog" className="nav-link" onClick={closeMenu}>
             {t('navbar.blog')}
           </Link>
-          <Link 
-            to="/faq" 
-            className={`navbar-link ${isActive('/faq') ? 'active' : ''}`}
-            onClick={closeMenu}
-          >
+          <Link to="/faq" className="nav-link" onClick={closeMenu}>
             {t('navbar.faq')}
           </Link>
-          <Link 
-            to="/contact" 
-            className={`navbar-link ${isActive('/contact') ? 'active' : ''}`}
-            onClick={closeMenu}
-          >
+          <Link to="/contact" className="nav-link" onClick={closeMenu}>
             {t('navbar.contact')}
           </Link>
-          <Link 
-            to="/book-appointment" 
-            className="btn btn-primary"
-          >
-            {t('BookNow')}
-          </Link>
-          <Link 
-            to="/login" 
-            className="btn btn-primary"
-          >
-            {t('navbar.login')}
-          </Link>
-          <LanguageToggle />
+          
+          {isAuthenticated() && !isAdmin && (
+            <Link to="/booking" className="nav-link nav-booking" onClick={closeMenu}>
+              {t('navbar.booking')}
+            </Link>
+          )}
+
+          {isAuthenticated() ? (
+            <div className="nav-auth">
+              {isAdmin && (
+                <Link to="/admin" className="nav-link nav-admin" onClick={closeMenu}>
+                  {t('navbar.dashboard')}
+                </Link>
+              )}
+              <span className="nav-user-name">
+                {user?.name || user?.email}
+              </span>
+              <button className="nav-link nav-logout" onClick={handleLogout}>
+                {t('navbar.logout')}
+              </button>
+            </div>
+          ) : (
+            <div className="nav-auth">
+              <Link to="/login" className="nav-link" onClick={closeMenu}>
+                {t('navbar.login')}
+              </Link>
+              <Link to="/signup" className="nav-link nav-signup" onClick={closeMenu}>
+                {t('navbar.signup')}
+              </Link>
+            </div>
+          )}
         </div>
-        
-        <div className="navbar-toggle" onClick={toggleMenu}>
-          {isOpen ? <FaTimes /> : <FaBars />}
+
+        <div className="nav-controls">
+          <LanguageToggle />
+          <div className={`nav-toggle ${isMenuOpen ? 'active' : ''}`} onClick={toggleMenu}>
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+          </div>
         </div>
       </div>
     </nav>

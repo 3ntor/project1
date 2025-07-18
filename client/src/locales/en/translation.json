@@ -1,75 +1,62 @@
 {
   "navbar": {
-    "brand": "Nafsiatak",
+    "brand": "Nafsyetak",
     "home": "Home",
-    "services": "Services",
-    "about": "About",
-    "doctor": "Doctor",
+    "services": "Services", 
+    "booking": "Booking",
     "blog": "Blog",
-    "faq": "FAQ",
-    "contact": "Contact",
-    "bookAppointment": "Book Appointment",
+    "doctor": "Doctor",
+    "faq": "FAQs",
+    "contact": "Contact Us",
     "login": "Login",
-    "signup": "Sign Up"
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "dashboard": "Dashboard"
   },
-  "login": {
-    "title": "Login",
-    "email": "Email",
-    "password": "Password",
-    "submit": "Submit",
-    "noAccount": "Don't have an account?",
-    "signUp": "Sign Up"
+  "footer": {
+    "brand": "Nafsyetak",
+    "description": "Your journey to mental wellness starts here. Professional psychological services in a supportive environment.",
+    "quickLinks": "Quick Links",
+    "contactInfo": "Contact Info",
+    "address": "123 Wellness Street, Cairo, Egypt",
+    "phone": "+20 123 456 7890",
+    "email": "info@nafsyetak.com",
+    "socialMedia": "Follow Us",
+    "copyright": "© 2025 Nafsyetak. All rights reserved."
   },
-  "signup": {
-    "title": "Sign Up",
-    "name": "Full Name",
-    "email": "Email",
-    "password": "Password",
-    "phone": "Phone Number",
-    "submit": "Submit"
-  },
-  "about": {
-    "title": "About Nafsiatak",
-    "description": "Dedicated to providing compassionate, evidence-based psychological care for individuals, couples, and families.",
-    "mission": {
-      "title": "Our Mission",
-      "text1": "Our mission is to provide compassionate, evidence-based psychological services that empower individuals to overcome challenges, heal from trauma, and achieve their full potential.",
-      "text2": "We are committed to creating a safe, supportive environment where clients feel heard, understood, and valued. Our team of experienced professionals uses the latest research and therapeutic techniques to help you navigate life's challenges and build resilience."
-    },
-    "team": {
-      "title": "Meet Our Team",
-      "subtitle": "Our experienced team of licensed psychologists and therapists are here to support your mental health journey."
-    },
-    "values": {
-      "title": "Our Values",
-      "description": "The principles that guide our practice and shape our approach to mental health care.",
-      "compassion": {
-        "title": "Compassion",
-        "description": "We approach every client with empathy, understanding, and genuine care for their well-being."
-      },
-      "excellence": {
-        "title": "Excellence",
-        "description": "We maintain the highest standards of professional practice and continuous learning."
-      },
-      "integrity": {
-        "title": "Integrity",
-        "description": "We uphold the highest ethical standards and maintain complete confidentiality."
-      },
-      "collaboration": {
-        "title": "Collaboration",
-        "description": "We work together with clients to develop personalized treatment plans and goals."
+  "auth": {
+    "login": {
+      "title": "Login to Your Account",
+      "email": "Email Address",
+      "password": "Password",
+      "submit": "Login",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up",
+      "forgotPassword": "Forgot Password?",
+      "errors": {
+        "required": "Please enter email and password",
+        "invalid": "Invalid email or password"
       }
     },
-    "stats": {
-      "clientsHelped": "Clients Helped",
-      "yearsExperience": "Years Experience",
-      "successRate": "Success Rate",
-      "supportAvailable": "Support Available"
+    "signup": {
+      "title": "Create New Account",
+      "name": "Full Name",
+      "email": "Email Address",
+      "password": "Password",
+      "phone": "Phone Number",
+      "submit": "Create Account",
+      "haveAccount": "Already have an account?",
+      "login": "Login",
+      "errors": {
+        "required": "All fields are required",
+        "emailExists": "Email already exists"
+      }
+    },
+    "success": {
+      "login": "Login successful!",
+      "signup": "Account created successfully!",
+      "logout": "Logged out successfully!"
     }
-  },
-  "contact": {
-    "subject": "Inquiry about service: {{serviceName}}",
-    "message": "I would like to learn more about {{serviceName}} service.\n\nService details:\n- Price: {{price}} EGP\n- Duration: {{duration}}\n\n{{message}}"
   },
   "home": {
     "hero": {
@@ -79,14 +66,14 @@
       "learnMore": "Learn More"
     },
     "features": {
-      "title": "Why Choose Nafsiatak?",
+      "title": "Why Choose Nafsyetak?",
       "subtitle": "We are committed to providing the highest quality psychological care in a supportive and professional environment.",
       "compassionateCare": {
         "title": "Compassionate Care",
         "description": "We provide warm, empathetic care in a safe and supportive environment."
       },
       "expertTeam": {
-        "title": "Expert Team",
+        "title": "Expert Team", 
         "description": "Our licensed psychologists have years of experience in various therapeutic approaches."
       },
       "evidenceBased": {
@@ -99,51 +86,25 @@
       }
     },
     "services": {
-      "title": "Our Services",
-      "description": "Comprehensive psychological services tailored to your unique needs and goals.",
-      "professionalServices": "Professional Psychological Services",
-      "individualTherapy": {
-        "title": "Individual Therapy",
-        "description": "One-on-one therapy sessions to address personal challenges and promote growth.",
-        "learnMore": "Learn More"
-      },
-      "couplesTherapy": {
-        "title": "Couples Therapy",
-        "description": "Strengthen your relationship through effective communication and understanding.",
-        "learnMore": "Learn More"
-      },
-      "familyTherapy": {
-        "title": "Family Therapy",
-        "description": "Improve family dynamics and resolve conflicts in a supportive environment.",
-        "learnMore": "Learn More"
-      },
-      "types": {
-        "individualtherapy": {
-          "description": "One-on-one therapy sessions tailored to your specific needs and goals."
-        },
-        "couplestherapy": {
-          "description": "Specialized therapy for couples to improve communication and strengthen relationships."
-        },
-        "familytherapy": {
-          "description": "Therapy sessions for families to improve communication and resolve conflicts."
-        }
-      },
-      "duration": "Duration: {{duration}}",
-      "price": "EGP {{price}}"
+      "title": "Our Psychological Services",
+      "subtitle": "Comprehensive therapeutic services tailored to your unique needs and goals.",
+      "viewAll": "View All Services",
+      "bookNow": "Book Now",
+      "learnMore": "Learn More"
     },
     "testimonials": {
       "title": "What Our Clients Say",
       "subtitle": "Real stories from people who have transformed their lives with our help.",
-      "sarah": {
-        "name": "Sarah Johnson",
-        "text": "Nafsiatak helped me overcome my anxiety and find inner peace. The therapists are truly amazing."
+      "testimonial1": {
+        "name": "Sarah Ahmed",
+        "text": "Nafsyetak helped me overcome my anxiety and find inner peace. The therapists are truly amazing and caring."
       },
-      "michael": {
-        "name": "Michael Chen",
+      "testimonial2": {
+        "name": "Mohamed Hassan",
         "text": "Professional, caring, and effective. I highly recommend their services for anyone seeking mental wellness."
       },
-      "emily": {
-        "name": "Emily Rodriguez",
+      "testimonial3": {
+        "name": "Fatima Ali",
         "text": "The family therapy sessions have brought our family closer together. We're so grateful for their support."
       }
     },
@@ -153,6 +114,309 @@
       "bookAppointment": "Book Appointment",
       "contactUs": "Contact Us"
     }
+  },
+  "services": {
+    "title": "Our Psychological Services",
+    "subtitle": "Professional therapy services tailored to your unique mental health needs",
+    "bookNow": "Book Now",
+    "hero": {
+      "title": "Professional Psychological Services",
+      "subtitle": "Comprehensive mental health care with evidence-based therapeutic approaches",
+      "stats": {
+        "services": "Specialized Services",
+        "clients": "Happy Clients",
+        "satisfaction": "Success Rate"
+      }
+    },
+    "individual": {
+      "name": "Individual Therapy",
+      "description": "One-on-one therapy sessions designed to address your personal mental health needs, emotional challenges, and life goals in a safe, confidential environment.",
+      "features": [
+        "Personalized treatment plans",
+        "Evidence-based therapeutic techniques",
+        "Confidential and supportive environment"
+      ]
+    },
+    "couples": {
+      "name": "Couples Therapy", 
+      "description": "Specialized therapy to help couples improve communication, resolve conflicts, and strengthen their emotional connection and relationship satisfaction.",
+      "features": [
+        "Communication skills development",
+        "Conflict resolution techniques",
+        "Relationship strengthening strategies"
+      ]
+    },
+    "family": {
+      "name": "Family Therapy",
+      "description": "Family-focused therapeutic sessions designed to improve family dynamics, resolve conflicts, and enhance communication between family members.",
+      "features": [
+        "Family dynamics improvement",
+        "Conflict mediation and resolution",
+        "Enhanced family communication"
+      ]
+    },
+    "anxiety": {
+      "name": "Anxiety Treatment",
+      "description": "Evidence-based therapeutic approaches including CBT and mindfulness techniques to help you manage anxiety, panic attacks, and stress-related disorders.",
+      "features": [
+        "Cognitive Behavioral Therapy (CBT)",
+        "Relaxation and mindfulness techniques",
+        "Coping strategies development"
+      ]
+    },
+    "depression": {
+      "name": "Depression Treatment",
+      "description": "Comprehensive treatment plans combining therapy and support to help you overcome depression, regain motivation, and rediscover joy in daily life.",
+      "features": [
+        "Mood disorder treatment",
+        "Behavioral activation techniques",
+        "Long-term wellness planning"
+      ]
+    },
+    "whyChoose": {
+      "title": "Why Choose Our Services?",
+      "subtitle": "We are committed to providing the highest quality psychological care with proven results",
+      "features": {
+        "personalized": {
+          "title": "Personalized Approach",
+          "description": "Every therapy session is tailored to your specific needs, goals, and personal circumstances."
+        },
+        "evidenceBased": {
+          "title": "Evidence-Based Methods",
+          "description": "We use scientifically proven therapeutic techniques and methods for effective, lasting results."
+        },
+        "supportive": {
+          "title": "Supportive Environment",
+          "description": "A safe, non-judgmental space where you can feel comfortable sharing and exploring your thoughts."
+        },
+        "measurable": {
+          "title": "Measurable Progress",
+          "description": "Track your therapeutic progress and celebrate your achievements throughout your healing journey."
+        }
+      }
+    },
+    "process": {
+      "title": "How It Works",
+      "subtitle": "Your journey to mental wellness in four simple steps",
+      "steps": {
+        "consultation": {
+          "title": "Initial Consultation",
+          "description": "Schedule your first appointment to discuss your needs and goals with our experienced therapist."
+        },
+        "assessment": {
+          "title": "Comprehensive Assessment",
+          "description": "We conduct a thorough assessment to understand your situation and develop the best treatment approach."
+        },
+        "treatment": {
+          "title": "Personalized Treatment Plan",
+          "description": "Create a customized treatment plan tailored specifically to your goals and therapeutic needs."
+        },
+        "support": {
+          "title": "Ongoing Support",
+          "description": "Receive consistent support and guidance throughout your therapeutic journey to lasting wellness."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to Start Your Healing Journey?",
+      "subtitle": "Take the first step towards better mental health and emotional well-being today.",
+      "bookButton": "Book Appointment",
+      "contactButton": "Contact Us"
+    }
+  },
+  "booking": {
+    "title": "Book Your Appointment",
+    "subtitle": "Schedule your session with our experienced therapists. Please login first to book an appointment.",
+    "loginRequired": "Please login to book an appointment",
+    "loginButton": "Login Now",
+    "form": {
+      "name": "Full Name",
+      "email": "Email Address", 
+      "phone": "Phone Number",
+      "service": "Select Service",
+      "date": "Select Date",
+      "time": "Select Time",
+      "notes": "Additional Notes (Optional)",
+      "submit": "Book Appointment",
+      "cancel": "Cancel"
+    },
+    "timeSlots": {
+      "morning": "Morning",
+      "afternoon": "Afternoon", 
+      "evening": "Evening"
+    },
+    "success": "Appointment booked successfully!",
+    "myBookings": {
+      "title": "My Appointments",
+      "noBookings": "You have no appointments yet.",
+      "status": {
+        "pending": "Pending",
+        "confirmed": "Confirmed", 
+        "cancelled": "Cancelled"
+      }
+    }
+  },
+  "blog": {
+    "title": "Mental Health Blog",
+    "subtitle": "Insights, tips, and resources for your mental wellness journey.",
+    "readMore": "Read More",
+    "backToBlog": "Back to Blog",
+    "addPost": "Add New Post",
+    "noArticles": "No blog articles available.",
+    "categories": {
+      "anxiety": "Anxiety",
+      "depression": "Depression", 
+      "relationships": "Relationships",
+      "selfCare": "Self Care",
+      "therapy": "Therapy"
+    }
+  },
+  "doctor": {
+    "title": "Meet Dr. Sarah Ahmed",
+    "subtitle": "Clinical Psychologist & Founder of Nafsyetak",
+    "biography": {
+      "title": "Biography",
+      "content": "Dr. Sarah Ahmed is a licensed clinical psychologist with over 15 years of experience in mental health treatment. She specializes in anxiety disorders, depression, and family therapy. Dr. Ahmed founded Nafsyetak with the vision of making quality mental health care accessible to everyone."
+    },
+    "education": {
+      "title": "Education & Certifications",
+      "phd": "Ph.D. in Clinical Psychology - Cairo University",
+      "masters": "Master's in Counseling Psychology - AUC", 
+      "bachelor": "Bachelor's in Psychology - Cairo University",
+      "license": "Licensed Clinical Psychologist - Egyptian Ministry of Health"
+    },
+    "specializations": {
+      "title": "Areas of Expertise",
+      "anxiety": "Anxiety Disorders",
+      "depression": "Depression Treatment",
+      "trauma": "Trauma Therapy",
+      "family": "Family & Couples Therapy",
+      "cbt": "Cognitive Behavioral Therapy"
+    },
+    "experience": {
+      "title": "Professional Experience",
+      "years": "15+ Years",
+      "clients": "1000+ Clients Helped",
+      "success": "95% Success Rate"
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to common questions about our services and mental health.",
+    "questions": {
+      "q1": {
+        "question": "How do I know if I need therapy?",
+        "answer": "Consider therapy if you're experiencing persistent sadness, anxiety, relationship problems, or difficulty coping with daily life. Therapy can help anyone looking to improve their mental wellness."
+      },
+      "q2": {
+        "question": "What should I expect in my first session?",
+        "answer": "Your first session involves getting to know your therapist, discussing your concerns and goals, and creating a treatment plan. It's a safe space to share your thoughts and feelings."
+      },
+      "q3": {
+        "question": "How long does therapy take?",
+        "answer": "The duration varies based on individual needs and goals. Some people benefit from short-term therapy (8-12 sessions), while others prefer longer-term support."
+      },
+      "q4": {
+        "question": "Is everything I say confidential?",
+        "answer": "Yes, everything discussed in therapy is strictly confidential, except in rare cases where there's a risk of harm to yourself or others, as required by law."
+      },
+      "q5": {
+        "question": "Do you accept insurance?",
+        "answer": "We accept most major insurance plans. Please contact us to verify your coverage and discuss payment options."
+      },
+      "q6": {
+        "question": "Can I switch therapists if needed?",
+        "answer": "Absolutely. Finding the right therapeutic fit is important. We'll help you find another therapist within our practice if needed."
+      }
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with us. We're here to help you on your mental wellness journey.",
+    "form": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number", 
+      "subject": "Subject",
+      "message": "Message",
+      "submit": "Send Message"
+    },
+    "info": {
+      "address": {
+        "title": "Our Address",
+        "value": "123 Wellness Street, Zamalek, Cairo, Egypt"
+      },
+      "phone": {
+        "title": "Phone Numbers",
+        "primary": "+20 123 456 7890",
+        "secondary": "+20 987 654 3210"
+      },
+      "email": {
+        "title": "Email Address", 
+        "value": "info@nafsyetak.com"
+      },
+      "hours": {
+        "title": "Working Hours",
+        "weekdays": "Sunday - Thursday: 9:00 AM - 8:00 PM",
+        "weekend": "Friday - Saturday: 10:00 AM - 6:00 PM"
+      }
+    },
+    "success": "Message sent successfully! We'll get back to you soon."
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "welcome": "Welcome to Admin Panel",
+    "stats": {
+      "totalUsers": "Total Users",
+      "totalBookings": "Total Bookings", 
+      "totalPosts": "Blog Posts",
+      "pendingBookings": "Pending Bookings"
+    },
+    "sections": {
+      "users": "Manage Users",
+      "bookings": "Manage Bookings",
+      "blog": "Manage Blog",
+      "settings": "Settings"
+    },
+    "bookings": {
+      "title": "All Bookings",
+      "user": "User",
+      "service": "Service",
+      "date": "Date",
+      "time": "Time", 
+      "status": "Status",
+      "actions": "Actions",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "users": {
+      "title": "All Users",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "joinDate": "Join Date",
+      "actions": "Actions"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success!",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "noData": "No data available",
+    "confirm": "Are you sure?",
+    "yes": "Yes",
+    "no": "No"
   },
   "language": {
     "en": "English",

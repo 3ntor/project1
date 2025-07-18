@@ -1,305 +1,288 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import axios from 'axios';
 import './Admin.css';
 
 const Admin = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
-  const [activeTab, setActiveTab] = useState('appointments');
-  const [appointments, setAppointments] = useState([]);
-  const [contacts, setContacts] = useState([]);
-  const [faqs, setFaqs] = useState([]);
+  const { isAuthenticated, isAdminUser } = useAuth();
+  
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [stats, setStats] = useState({});
+  const [users, setUsers] = useState([]);
+  const [bookings, setBookings] = useState([]);
   const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
+  const currentLanguage = i18n.language;
+
+  // Redirect if not admin
   useEffect(() => {
-    if (!isAuthenticated || user?.role !== 'admin') {
+    if (!isAuthenticated() || !isAdminUser()) {
       navigate('/login');
       return;
     }
-    loadData();
-  }, [isAuthenticated, user]);
+    loadDashboardData();
+  }, [isAuthenticated, isAdminUser, navigate]);
 
-  const loadData = async () => {
+  const loadDashboardData = async () => {
     try {
-      const [appointmentsRes, contactsRes, faqsRes, blogRes] = await Promise.all([
-        fetch('/api/admin/appointments'),
-        fetch('/api/admin/contacts'),
-        fetch('/api/admin/faqs'),
-        fetch('/api/admin/blog')
-      ]);
-
-      const [appointmentsData, contactsData, faqsData, blogData] = await Promise.all([
-        appointmentsRes.json(),
-        contactsRes.json(),
-        faqsRes.json(),
-        blogRes.json()
-      ]);
-
-      setAppointments(appointmentsData);
-      setContacts(contactsData);
-      setFaqs(faqsData);
-      setBlogPosts(blogData);
-      setLoading(false);
+      setLoading(true);
+      const response = await axios.get('/api/admin/dashboard/stats');
+      setStats(response.data.stats || {});
     } catch (error) {
-      console.error('Error loading admin data:', error);
+      console.error('Error loading dashboard data:', error);
+      setError('Failed to load dashboard data');
+    } finally {
       setLoading(false);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
+  const loadUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('/api/admin/users');
+      setUsers(response.data.users || []);
+    } catch (error) {
+      console.error('Error loading users:', error);
+      setError('Failed to load users');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateAppointmentStatus = (id, status) => {
-    setAppointments(prev => 
-      prev.map(apt => 
-        apt._id === id ? { ...apt, status } : apt
-      )
-    );
+  const loadBookings = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('/api/admin/bookings');
+      setBookings(response.data.bookings || []);
+    } catch (error) {
+      console.error('Error loading bookings:', error);
+      setError('Failed to load bookings');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const deleteItem = (type, id) => {
-    if (window.confirm('هل أنت متأكد من الحذف؟')) {
-      switch (type) {
-        case 'appointment':
-          setAppointments(prev => prev.filter(apt => apt._id !== id));
-          break;
-        case 'contact':
-          setContacts(prev => prev.filter(contact => contact._id !== id));
-          break;
-        case 'faq':
-          setFaqs(prev => prev.filter(faq => faq._id !== id));
-          break;
-        case 'blog':
-          setBlogPosts(prev => prev.filter(post => post._id !== id));
-          break;
-        default:
-          break;
+  const handleTabChange = async (tab) => {
+    setActiveTab(tab);
+    setError('');
+    
+    switch (tab) {
+      case 'dashboard':
+        await loadDashboardData();
+        break;
+      case 'users':
+        await loadUsers();
+        break;
+      case 'bookings':
+        await loadBookings();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleBookingStatusUpdate = async (bookingId, status) => {
+    try {
+      await axios.patch(`/api/admin/bookings/${bookingId}/status`, { status });
+      // Reload bookings
+      await loadBookings();
+    } catch (error) {
+      console.error('Error updating booking status:', error);
+      setError('Failed to update booking status');
+    }
+  };
+
+  const handleDeleteUser = async (userId) => {
+    if (window.confirm(t('common.confirm'))) {
+      try {
+        await axios.delete(`/api/admin/users/${userId}`);
+        // Reload users
+        await loadUsers();
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        setError('Failed to delete user');
       }
     }
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('ar-EG');
+    return new Date(dateString).toLocaleDateString(currentLanguage === 'ar' ? 'ar-EG' : 'en-US');
   };
 
   const formatTime = (timeString) => {
-    return timeString;
+    const [hours, minutes] = timeString.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${minutes} ${ampm}`;
   };
 
-  if (loading) {
+  // Show loading or redirect if not admin
+  if (!isAuthenticated() || !isAdminUser()) {
     return (
-      <div className="admin-loading">
-        <div className="loading-spinner"></div>
-        <p>جاري التحميل...</p>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated || user?.role !== 'admin') {
-    return (
-      <div className="admin-header">
-        <h1>لوحة تحكم الأدمن</h1>
-        <button onClick={handleLogout} className="logout-btn">تسجيل الخروج</button>
+      <div className="admin-page">
+        <div className="access-denied">
+          <h2>Access Denied</h2>
+          <p>You need admin privileges to access this page.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="admin-dashboard">
-      <div className="admin-header">
-        <h1>لوحة تحكم الأدمن</h1>
-        <button onClick={handleLogout} className="logout-btn">تسجيل الخروج</button>
-      </div>
+    <div className={`admin-page ${currentLanguage === 'ar' ? 'rtl' : 'ltr'}`}>
+      <div className="admin-container">
+        <div className="admin-header">
+          <h1>{t('admin.title')}</h1>
+          <p>{t('admin.welcome')}</p>
+        </div>
 
-      <div className="admin-tabs">
-        <button
-          className={`tab-btn ${activeTab === 'appointments' ? 'active' : ''}`}
-          onClick={() => setActiveTab('appointments')}
-        >
-          الحجوزات ({appointments.length})
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'contacts' ? 'active' : ''}`}
-          onClick={() => setActiveTab('contacts')}
-        >
-          الرسائل ({contacts.length})
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'faqs' ? 'active' : ''}`}
-          onClick={() => setActiveTab('faqs')}
-        >
-          الأسئلة الشائعة ({faqs.length})
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'blog' ? 'active' : ''}`}
-          onClick={() => setActiveTab('blog')}
-        >
-          المدونة ({blogPosts.length})
-        </button>
-      </div>
+        <div className="admin-tabs">
+          <button
+            className={`tab-button ${activeTab === 'dashboard' ? 'active' : ''}`}
+            onClick={() => handleTabChange('dashboard')}
+          >
+            Dashboard
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'users' ? 'active' : ''}`}
+            onClick={() => handleTabChange('users')}
+          >
+            {t('admin.sections.users')}
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'bookings' ? 'active' : ''}`}
+            onClick={() => handleTabChange('bookings')}
+          >
+            {t('admin.sections.bookings')}
+          </button>
+        </div>
 
-      <div className="admin-content">
-        {/* Appointments Tab */}
-        {activeTab === 'appointments' && (
-          <div className="appointments-section">
-            <h3>إدارة الحجوزات</h3>
-            <div className="appointments-grid">
-              {appointments.map(appointment => (
-                <div key={appointment._id} className="appointment-card">
-                  <div className="appointment-header">
-                    <h4>{appointment.name}</h4>
-                    <span className={`status ${appointment.status}`}>
-                      {appointment.status === 'pending' && 'في الانتظار'}
-                      {appointment.status === 'confirmed' && 'مؤكد'}
-                      {appointment.status === 'cancelled' && 'ملغي'}
-                      {appointment.status === 'completed' && 'مكتمل'}
-                    </span>
-                  </div>
-                  <div className="appointment-details">
-                    <p><strong>البريد الإلكتروني:</strong> {appointment.email}</p>
-                    <p><strong>الهاتف:</strong> {appointment.phone}</p>
-                    <p><strong>الخدمة:</strong> {appointment.service.name}</p>
-                    <p><strong>السعر:</strong> {appointment.service.price} جنيه</p>
-                    <p><strong>التاريخ:</strong> {formatDate(appointment.date)}</p>
-                    <p><strong>الوقت:</strong> {formatTime(appointment.time)}</p>
-                    {appointment.message && (
-                      <p><strong>الرسالة:</strong> {appointment.message}</p>
-                    )}
-                  </div>
-                  <div className="appointment-actions">
-                    <select
-                      value={appointment.status}
-                      onChange={(e) => updateAppointmentStatus(appointment._id, e.target.value)}
-                      className="status-select"
-                    >
-                      <option value="pending">في الانتظار</option>
-                      <option value="confirmed">مؤكد</option>
-                      <option value="cancelled">ملغي</option>
-                      <option value="completed">مكتمل</option>
-                    </select>
-                    <button
-                      onClick={() => deleteItem('appointment', appointment._id)}
-                      className="delete-btn"
-                    >
-                      حذف
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+        {error && (
+          <div className="error-message">
+            {error}
           </div>
         )}
 
-        {/* Contacts Tab */}
-        {activeTab === 'contacts' && (
-          <div className="contacts-section">
-            <h3>إدارة الرسائل</h3>
-            <div className="contacts-grid">
-              {contacts.map(contact => (
-                <div key={contact._id} className="contact-card">
-                  <div className="contact-header">
-                    <h4>{contact.name}</h4>
-                    <span className="contact-date">{formatDate(contact.createdAt)}</span>
+        {loading ? (
+          <div className="loading">{t('common.loading')}</div>
+        ) : (
+          <div className="admin-content">
+            {activeTab === 'dashboard' && (
+              <div className="dashboard-section">
+                <h2>Dashboard Statistics</h2>
+                <div className="stats-grid">
+                  <div className="stat-card">
+                    <h3>{t('admin.stats.totalUsers')}</h3>
+                    <p className="stat-number">{stats.totalUsers || 0}</p>
                   </div>
-                  <div className="contact-details">
-                    <p><strong>البريد الإلكتروني:</strong> {contact.email}</p>
-                    <p><strong>الموضوع:</strong> {contact.subject}</p>
-                    <p><strong>الرسالة:</strong> {contact.message}</p>
+                  <div className="stat-card">
+                    <h3>{t('admin.stats.totalBookings')}</h3>
+                    <p className="stat-number">{stats.totalBookings || 0}</p>
                   </div>
-                  <div className="contact-actions">
-                    <button
-                      onClick={() => deleteItem('contact', contact._id)}
-                      className="delete-btn"
-                    >
-                      حذف
-                    </button>
+                  <div className="stat-card">
+                    <h3>{t('admin.stats.pendingBookings')}</h3>
+                    <p className="stat-number">{stats.pendingBookings || 0}</p>
+                  </div>
+                  <div className="stat-card">
+                    <h3>{t('admin.stats.totalPosts')}</h3>
+                    <p className="stat-number">{stats.totalPosts || 0}</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
+              </div>
+            )}
 
-        {/* FAQs Tab */}
-        {activeTab === 'faqs' && (
-          <div className="faqs-section">
-            <h3>إدارة الأسئلة الشائعة</h3>
-            <button className="add-faq-btn">إضافة سؤال جديد</button>
-            <div className="faqs-grid">
-              {faqs.map(faq => (
-                <div key={faq._id} className="faq-card">
-                  <div className="faq-header">
-                    <h4>{faq.question}</h4>
-                    <span className={`faq-status ${faq.isActive ? 'active' : 'inactive'}`}>
-                      {faq.isActive ? 'نشط' : 'غير نشط'}
-                    </span>
-                  </div>
-                  <div className="faq-details">
-                    <p><strong>الإجابة:</strong> {faq.answer}</p>
-                    <p><strong>الفئة:</strong> {faq.category}</p>
-                    <p><strong>الترتيب:</strong> {faq.order}</p>
-                  </div>
-                  <div className="faq-actions">
-                    <button className="edit-btn">تعديل</button>
-                    <button
-                      onClick={() => deleteItem('faq', faq._id)}
-                      className="delete-btn"
-                    >
-                      حذف
-                    </button>
-                  </div>
+            {activeTab === 'users' && (
+              <div className="users-section">
+                <h2>{t('admin.users.title')}</h2>
+                <div className="users-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>{t('admin.users.name')}</th>
+                        <th>{t('admin.users.email')}</th>
+                        <th>{t('admin.users.phone')}</th>
+                        <th>{t('admin.users.joinDate')}</th>
+                        <th>{t('admin.users.actions')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {users.map(user => (
+                        <tr key={user._id}>
+                          <td>{user.name}</td>
+                          <td>{user.email}</td>
+                          <td>{user.phone}</td>
+                          <td>{formatDate(user.createdAt)}</td>
+                          <td>
+                            <button
+                              className="delete-button"
+                              onClick={() => handleDeleteUser(user._id)}
+                            >
+                              {t('common.delete')}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
+              </div>
+            )}
 
-        {/* Blog Tab */}
-        {activeTab === 'blog' && (
-          <div className="blog-section">
-            <h3>إدارة المدونة</h3>
-            <button className="add-blog-btn">إضافة مقال جديد</button>
-            <div className="blog-grid">
-              {blogPosts.map(post => (
-                <div key={post._id} className="blog-card">
-                  <div className="blog-header">
-                    <h4>{post.title}</h4>
-                    <div className="blog-status">
-                      <span className={`publish-status ${post.isPublished ? 'published' : 'draft'}`}>
-                        {post.isPublished ? 'منشور' : 'مسودة'}
-                      </span>
-                      {post.isFeatured && (
-                        <span className="featured-badge">مميز</span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="blog-details">
-                    <p><strong>الملخص:</strong> {post.excerpt}</p>
-                    <p><strong>الفئة:</strong> {post.category}</p>
-                    <p><strong>الكاتب:</strong> {post.author.name}</p>
-                    <p><strong>تاريخ النشر:</strong> {formatDate(post.publishedAt)}</p>
-                    <div className="blog-stats">
-                      <span><strong>المشاهدات:</strong> {post.views}</span>
-                      <span><strong>الإعجابات:</strong> {post.likes}</span>
-                    </div>
-                  </div>
-                  <div className="blog-actions">
-                    <button className="edit-btn">تعديل</button>
-                    <button className="view-btn">عرض</button>
-                    <button
-                      onClick={() => deleteItem('blog', post._id)}
-                      className="delete-btn"
-                    >
-                      حذف
-                    </button>
-                  </div>
+            {activeTab === 'bookings' && (
+              <div className="bookings-section">
+                <h2>{t('admin.bookings.title')}</h2>
+                <div className="bookings-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>{t('admin.bookings.user')}</th>
+                        <th>{t('admin.bookings.service')}</th>
+                        <th>{t('admin.bookings.date')}</th>
+                        <th>{t('admin.bookings.time')}</th>
+                        <th>{t('admin.bookings.status')}</th>
+                        <th>{t('admin.bookings.actions')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {bookings.map(booking => (
+                        <tr key={booking._id}>
+                          <td>{booking.user?.name || booking.name}</td>
+                          <td>{booking.service}</td>
+                          <td>{formatDate(booking.date)}</td>
+                          <td>{formatTime(booking.time)}</td>
+                          <td>
+                            <span className={`status ${booking.status}`}>
+                              {booking.status}
+                            </span>
+                          </td>
+                          <td>
+                            <button
+                              className="confirm-button"
+                              onClick={() => handleBookingStatusUpdate(booking._id, 'confirmed')}
+                            >
+                              {t('admin.bookings.confirm')}
+                            </button>
+                            <button
+                              className="cancel-button"
+                              onClick={() => handleBookingStatusUpdate(booking._id, 'cancelled')}
+                            >
+                              {t('admin.bookings.cancel')}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
           </div>
         )}
       </div>
