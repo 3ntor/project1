@@ -1,0 +1,161 @@
+{
+  "navbar": {
+    "brand": "Nafsiatak",
+    "home": "Home",
+    "services": "Services",
+    "about": "About",
+    "doctor": "Doctor",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "bookAppointment": "Book Appointment",
+    "login": "Login",
+    "signup": "Sign Up"
+  },
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Submit",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign Up"
+  },
+  "signup": {
+    "title": "Sign Up",
+    "name": "Full Name",
+    "email": "Email",
+    "password": "Password",
+    "phone": "Phone Number",
+    "submit": "Submit"
+  },
+  "about": {
+    "title": "About Nafsiatak",
+    "description": "Dedicated to providing compassionate, evidence-based psychological care for individuals, couples, and families.",
+    "mission": {
+      "title": "Our Mission",
+      "text1": "Our mission is to provide compassionate, evidence-based psychological services that empower individuals to overcome challenges, heal from trauma, and achieve their full potential.",
+      "text2": "We are committed to creating a safe, supportive environment where clients feel heard, understood, and valued. Our team of experienced professionals uses the latest research and therapeutic techniques to help you navigate life's challenges and build resilience."
+    },
+    "team": {
+      "title": "Meet Our Team",
+      "subtitle": "Our experienced team of licensed psychologists and therapists are here to support your mental health journey."
+    },
+    "values": {
+      "title": "Our Values",
+      "description": "The principles that guide our practice and shape our approach to mental health care.",
+      "compassion": {
+        "title": "Compassion",
+        "description": "We approach every client with empathy, understanding, and genuine care for their well-being."
+      },
+      "excellence": {
+        "title": "Excellence",
+        "description": "We maintain the highest standards of professional practice and continuous learning."
+      },
+      "integrity": {
+        "title": "Integrity",
+        "description": "We uphold the highest ethical standards and maintain complete confidentiality."
+      },
+      "collaboration": {
+        "title": "Collaboration",
+        "description": "We work together with clients to develop personalized treatment plans and goals."
+      }
+    },
+    "stats": {
+      "clientsHelped": "Clients Helped",
+      "yearsExperience": "Years Experience",
+      "successRate": "Success Rate",
+      "supportAvailable": "Support Available"
+    }
+  },
+  "contact": {
+    "subject": "Inquiry about service: {{serviceName}}",
+    "message": "I would like to learn more about {{serviceName}} service.\n\nService details:\n- Price: {{price}} EGP\n- Duration: {{duration}}\n\n{{message}}"
+  },
+  "home": {
+    "hero": {
+      "title": "Your Journey to Mental Wellness Starts Here",
+      "subtitle": "Professional psychological services to help you overcome challenges, heal, and thrive in life.",
+      "bookSession": "Book Your Session",
+      "learnMore": "Learn More"
+    },
+    "features": {
+      "title": "Why Choose Nafsiatak?",
+      "subtitle": "We are committed to providing the highest quality psychological care in a supportive and professional environment.",
+      "compassionateCare": {
+        "title": "Compassionate Care",
+        "description": "We provide warm, empathetic care in a safe and supportive environment."
+      },
+      "expertTeam": {
+        "title": "Expert Team",
+        "description": "Our licensed psychologists have years of experience in various therapeutic approaches."
+      },
+      "evidenceBased": {
+        "title": "Evidence-Based",
+        "description": "We use scientifically proven methods to help you achieve lasting positive change."
+      },
+      "confidential": {
+        "title": "Confidential",
+        "description": "Your privacy and confidentiality are our top priorities."
+      }
+    },
+    "services": {
+      "title": "Our Services",
+      "description": "Comprehensive psychological services tailored to your unique needs and goals.",
+      "professionalServices": "Professional Psychological Services",
+      "individualTherapy": {
+        "title": "Individual Therapy",
+        "description": "One-on-one therapy sessions to address personal challenges and promote growth.",
+        "learnMore": "Learn More"
+      },
+      "couplesTherapy": {
+        "title": "Couples Therapy",
+        "description": "Strengthen your relationship through effective communication and understanding.",
+        "learnMore": "Learn More"
+      },
+      "familyTherapy": {
+        "title": "Family Therapy",
+        "description": "Improve family dynamics and resolve conflicts in a supportive environment.",
+        "learnMore": "Learn More"
+      },
+      "types": {
+        "individualtherapy": {
+          "description": "One-on-one therapy sessions tailored to your specific needs and goals."
+        },
+        "couplestherapy": {
+          "description": "Specialized therapy for couples to improve communication and strengthen relationships."
+        },
+        "familytherapy": {
+          "description": "Therapy sessions for families to improve communication and resolve conflicts."
+        }
+      },
+      "duration": "Duration: {{duration}}",
+      "price": "EGP {{price}}"
+    },
+    "testimonials": {
+      "title": "What Our Clients Say",
+      "subtitle": "Real stories from people who have transformed their lives with our help.",
+      "sarah": {
+        "name": "Sarah Johnson",
+        "text": "Nafsiatak helped me overcome my anxiety and find inner peace. The therapists are truly amazing."
+      },
+      "michael": {
+        "name": "Michael Chen",
+        "text": "Professional, caring, and effective. I highly recommend their services for anyone seeking mental wellness."
+      },
+      "emily": {
+        "name": "Emily Rodriguez",
+        "text": "The family therapy sessions have brought our family closer together. We're so grateful for their support."
+      }
+    },
+    "cta": {
+      "title": "Ready to Start Your Healing Journey?",
+      "subtitle": "Take the first step towards better mental health and well-being. Book your appointment today.",
+      "bookAppointment": "Book Appointment",
+      "contactUs": "Contact Us"
+    }
+  },
+  "language": {
+    "en": "English",
+    "ar": "العربية"
+  }
+}

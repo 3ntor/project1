@@ -1,0 +1,348 @@
+.calendar-container {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Calendar Header */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.calendar-header h3 {
+  font-size: 1.3rem;
+  color: #333;
+  margin: 0;
+  font-weight: 600;
+}
+
+.calendar-nav-btn {
+  background: #f8f9fa;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #667eea;
+}
+
+.calendar-nav-btn:hover {
+  background: #667eea;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Calendar Grid */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.calendar-day-header {
+  text-align: center;
+  padding: 10px 5px;
+  font-weight: 600;
+  color: #667eea;
+  font-size: 0.9rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  border: 2px solid transparent;
+}
+
+.calendar-day.empty {
+  cursor: default;
+  background: transparent;
+}
+
+.calendar-day.available {
+  background: #f0f8ff;
+  border-color: #e3f2fd;
+}
+
+.calendar-day.available:hover {
+  background: #e3f2fd;
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+}
+
+.calendar-day.unavailable {
+  background: #f5f5f5;
+  color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.calendar-day.selected {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.day-number {
+  font-weight: 600;
+  font-size: 1rem;
+  z-index: 2;
+}
+
+.availability-indicator {
+  position: absolute;
+  bottom: 2px;
+  width: 6px;
+  height: 6px;
+  background: #4caf50;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Selected Date Info */
+.selected-date-info {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.selected-date-info h4 {
+  margin: 0 0 5px 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.selected-date-info p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Time Slots */
+.time-slots-container {
+  margin-bottom: 20px;
+}
+
+.time-slots-container h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.time-slot {
+  background: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+.time-slot:hover {
+  border-color: #667eea;
+  background: #e3f2fd;
+  transform: translateY(-2px);
+}
+
+.time-slot.selected {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  color: white;
+  box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+}
+
+/* Availability Check */
+.availability-check {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.check-availability-btn {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.check-availability-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.check-availability-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Legend */
+.calendar-legend {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.legend-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-indicator.available {
+  background: #4caf50;
+}
+
+.legend-indicator.unavailable {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+}
+
+.legend-indicator.selected {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* RTL Support */
+[dir="rtl"] .calendar-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .calendar-nav-btn {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .calendar-nav-btn:hover {
+  transform: scaleX(-1) scale(1.1);
+}
+
+[dir="rtl"] .time-slots-grid {
+  direction: rtl;
+}
+
+[dir="rtl"] .calendar-legend {
+  flex-direction: row-reverse;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .calendar-container {
+    padding: 15px;
+    margin: 0 10px;
+  }
+  
+  .calendar-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .calendar-nav-btn {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .day-number {
+    font-size: 0.9rem;
+  }
+  
+  .time-slots-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .time-slot {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+  
+  .calendar-legend {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  [dir="rtl"] .calendar-legend {
+    flex-direction: column;
+  }
+}
+
+/* Animation for calendar day selection */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.calendar-day.selected {
+  animation: pulse 0.3s ease-in-out;
+}
+
+/* Loading state for availability check */
+.check-availability-btn:disabled {
+  position: relative;
+}
+
+.check-availability-btn:disabled::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
