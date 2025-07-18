@@ -117,42 +117,111 @@
   },
   "services": {
     "title": "Our Psychological Services",
-    "subtitle": "Professional therapeutic services designed to support your mental health journey.",
+    "subtitle": "Professional therapy services tailored to your unique mental health needs",
     "bookNow": "Book Now",
-    "learnMore": "Learn More",
-    "duration": "Duration: {{duration}}",
-    "price": "EGP {{price}}",
-    "types": {
-      "individual": {
-        "title": "Individual Therapy",
-        "description": "One-on-one therapy sessions tailored to your specific needs and goals. Work through personal challenges, develop coping strategies, and achieve emotional wellness.",
-        "duration": "60 minutes",
-        "price": "500"
-      },
-      "couples": {
-        "title": "Couples Therapy", 
-        "description": "Specialized therapy for couples to improve communication, resolve conflicts, and strengthen relationships. Build a healthier, more fulfilling partnership.",
-        "duration": "90 minutes",
-        "price": "800"
-      },
-      "family": {
-        "title": "Family Therapy",
-        "description": "Family therapy sessions to improve communication, resolve conflicts, and strengthen family bonds. Create a more harmonious family environment.",
-        "duration": "90 minutes", 
-        "price": "750"
-      },
-      "anxiety": {
-        "title": "Anxiety Treatment",
-        "description": "Specialized treatment for anxiety disorders using evidence-based approaches like CBT. Learn to manage anxiety and regain control of your life.",
-        "duration": "60 minutes",
-        "price": "550"
-      },
-      "depression": {
-        "title": "Depression Therapy",
-        "description": "Comprehensive treatment for depression using proven therapeutic methods. Work towards emotional healing and renewed hope for the future.",
-        "duration": "60 minutes", 
-        "price": "550"
+    "hero": {
+      "title": "Professional Psychological Services",
+      "subtitle": "Comprehensive mental health care with evidence-based therapeutic approaches",
+      "stats": {
+        "services": "Specialized Services",
+        "clients": "Happy Clients",
+        "satisfaction": "Success Rate"
       }
+    },
+    "individual": {
+      "name": "Individual Therapy",
+      "description": "One-on-one therapy sessions designed to address your personal mental health needs, emotional challenges, and life goals in a safe, confidential environment.",
+      "features": [
+        "Personalized treatment plans",
+        "Evidence-based therapeutic techniques",
+        "Confidential and supportive environment"
+      ]
+    },
+    "couples": {
+      "name": "Couples Therapy", 
+      "description": "Specialized therapy to help couples improve communication, resolve conflicts, and strengthen their emotional connection and relationship satisfaction.",
+      "features": [
+        "Communication skills development",
+        "Conflict resolution techniques",
+        "Relationship strengthening strategies"
+      ]
+    },
+    "family": {
+      "name": "Family Therapy",
+      "description": "Family-focused therapeutic sessions designed to improve family dynamics, resolve conflicts, and enhance communication between family members.",
+      "features": [
+        "Family dynamics improvement",
+        "Conflict mediation and resolution",
+        "Enhanced family communication"
+      ]
+    },
+    "anxiety": {
+      "name": "Anxiety Treatment",
+      "description": "Evidence-based therapeutic approaches including CBT and mindfulness techniques to help you manage anxiety, panic attacks, and stress-related disorders.",
+      "features": [
+        "Cognitive Behavioral Therapy (CBT)",
+        "Relaxation and mindfulness techniques",
+        "Coping strategies development"
+      ]
+    },
+    "depression": {
+      "name": "Depression Treatment",
+      "description": "Comprehensive treatment plans combining therapy and support to help you overcome depression, regain motivation, and rediscover joy in daily life.",
+      "features": [
+        "Mood disorder treatment",
+        "Behavioral activation techniques",
+        "Long-term wellness planning"
+      ]
+    },
+    "whyChoose": {
+      "title": "Why Choose Our Services?",
+      "subtitle": "We are committed to providing the highest quality psychological care with proven results",
+      "features": {
+        "personalized": {
+          "title": "Personalized Approach",
+          "description": "Every therapy session is tailored to your specific needs, goals, and personal circumstances."
+        },
+        "evidenceBased": {
+          "title": "Evidence-Based Methods",
+          "description": "We use scientifically proven therapeutic techniques and methods for effective, lasting results."
+        },
+        "supportive": {
+          "title": "Supportive Environment",
+          "description": "A safe, non-judgmental space where you can feel comfortable sharing and exploring your thoughts."
+        },
+        "measurable": {
+          "title": "Measurable Progress",
+          "description": "Track your therapeutic progress and celebrate your achievements throughout your healing journey."
+        }
+      }
+    },
+    "process": {
+      "title": "How It Works",
+      "subtitle": "Your journey to mental wellness in four simple steps",
+      "steps": {
+        "consultation": {
+          "title": "Initial Consultation",
+          "description": "Schedule your first appointment to discuss your needs and goals with our experienced therapist."
+        },
+        "assessment": {
+          "title": "Comprehensive Assessment",
+          "description": "We conduct a thorough assessment to understand your situation and develop the best treatment approach."
+        },
+        "treatment": {
+          "title": "Personalized Treatment Plan",
+          "description": "Create a customized treatment plan tailored specifically to your goals and therapeutic needs."
+        },
+        "support": {
+          "title": "Ongoing Support",
+          "description": "Receive consistent support and guidance throughout your therapeutic journey to lasting wellness."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to Start Your Healing Journey?",
+      "subtitle": "Take the first step towards better mental health and emotional well-being today.",
+      "bookButton": "Book Appointment",
+      "contactButton": "Contact Us"
     }
   },
   "booking": {

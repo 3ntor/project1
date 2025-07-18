@@ -55,8 +55,18 @@ const Login = () => {
         if (result.isAdmin) {
           navigate('/admin');
         } else {
+          // Check if there's a selected service to pass to booking page
           const from = location.state?.from?.pathname || '/';
-          navigate(from, { replace: true });
+          const selectedService = location.state?.selectedService;
+          
+          if (from === '/booking' && selectedService) {
+            navigate('/booking', { 
+              state: { selectedService },
+              replace: true 
+            });
+          } else {
+            navigate(from, { replace: true });
+          }
         }
       } else {
         setError(result.message || t('auth.login.errors.invalid'));
