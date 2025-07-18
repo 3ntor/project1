@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import './i18n';
 import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -27,17 +28,38 @@ function App() {
           <main>
             <Suspense fallback={<Loading />}>
               <Routes>
+                {/* Public Routes - Accessible to all users (Guest, Registered, Admin) */}
                 <Route path="/" element={<Home />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/booking" element={<BookAppointment />} />
                 <Route path="/doctor" element={<DoctorProfile />} />
                 <Route path="/faq" element={<FAQ />} />
-                <Route path="/admin" element={<Admin />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:id" element={<BlogPost />} />
+                
+                {/* Authentication Routes - Accessible to non-authenticated users */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
+                
+                {/* Protected Routes - Registered Users Only (NOT Guests) */}
+                <Route 
+                  path="/booking" 
+                  element={
+                    <ProtectedRoute requireAuth={true}>
+                      <BookAppointment />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                {/* Admin Only Routes - Admin Users Only */}
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <Admin />
+                    </ProtectedRoute>
+                  } 
+                />
               </Routes>
             </Suspense>
           </main>

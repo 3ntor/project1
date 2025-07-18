@@ -10,23 +10,28 @@ require('dotenv').config();
 // إنشاء حساب المدير تلقائياً عند تشغيل الخادم
 const createAdminIfNotExists = async () => {
   try {
-    const Admin = require('./models/Admin');
+    const User = require('./models/User');
     
     // التحقق من وجود حساب إدارة
-    const existingAdmin = await Admin.findOne({ email: process.env.ADMIN_EMAIL || 'admin@nafsyetak.com' });
+    const existingAdmin = await User.findOne({ 
+      email: process.env.ADMIN_EMAIL || 'admin@nafsyetak.com',
+      role: 'admin'
+    });
     
     if (!existingAdmin) {
       console.log('Creating admin account...');
       const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'admin123', 10);
       
       const adminData = {
+        name: 'Administrator',
         email: process.env.ADMIN_EMAIL || 'admin@nafsyetak.com',
         password: hashedPassword,
+        phone: '+20 123 456 7890',
         role: 'admin'
       };
       
       // إنشاء حساب المدير
-      const admin = new Admin(adminData);
+      const admin = new User(adminData);
       await admin.save();
       console.log(`Admin account created successfully with email: ${adminData.email}`);
     } else {

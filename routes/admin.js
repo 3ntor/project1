@@ -1,38 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const Admin = require('../models/Admin');
 const User = require('../models/User');
 const Booking = require('../models/Booking');
 const BlogPost = require('../models/BlogPost');
+const { adminAuth } = require('../middleware/auth');
 
-// وسطاء التحقق من صلاحيات الإدارة
-const adminAuth = async (req, res, next) => {
-  try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    if (!token) {
-      return res.status(401).json({ message: 'الرجاء تسجيل الدخول أولاً' });
-    }
-    
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    // التحقق من وجود adminId في التوكن
-    if (decoded.adminId) {
-      const admin = await Admin.findById(decoded.adminId);
-      if (!admin) {
-        return res.status(403).json({ message: 'غير مصرح لك بالوصول' });
-      }
-      req.admin = admin;
-      next();
-    } else {
-      return res.status(403).json({ message: 'غير مصرح لك بالوصول' });
-    }
-  } catch (error) {
-    res.status(401).json({ message: 'الرجاء تسجيل الدخول أولاً' });
-  }
-};
-
-// الحصول على إحصائيات لوحة التحكم
+// Dashboard statistics
 router.get('/dashboard/stats', adminAuth, async (req, res) => {
   try {
     const totalUsers = await User.countDocuments();
@@ -41,14 +14,14 @@ router.get('/dashboard/stats', adminAuth, async (req, res) => {
     const confirmedBookings = await Booking.countDocuments({ status: 'confirmed' });
     const totalPosts = await BlogPost.countDocuments();
 
-    // إحصائيات الحجوزات الشهرية
+    // Monthly bookings
     const currentMonth = new Date();
     const startOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
     const monthlyBookings = await Booking.countDocuments({
       createdAt: { $gte: startOfMonth }
     });
 
-    // إحصائيات الخدمات
+    // Service statistics
     const serviceStats = await Booking.aggregate([
       { $group: { _id: '$service', count: { $sum: 1 } } }
     ]);
@@ -71,30 +44,28 @@ router.get('/dashboard/stats', adminAuth, async (req, res) => {
   }
 });
 
-// الحصول على جميع المستخدمين
+// Get all users
 router.get('/users', adminAuth, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    const users = await User.find()
+    const users = await User.find({ role: { $ne: 'admin' } })
       .select('-password')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
-    const totalUsers = await User.countDocuments();
+    const total = await User.countDocuments({ role: { $ne: 'admin' } });
 
     res.json({
       success: true,
       users,
       pagination: {
         currentPage: page,
-        totalPages: Math.ceil(totalUsers / limit),
-        totalUsers,
-        hasNextPage: page < Math.ceil(totalUsers / limit),
-        hasPrevPage: page > 1
+        totalPages: Math.ceil(total / limit),
+        totalUsers: total
       }
     });
   } catch (error) {
@@ -103,7 +74,7 @@ router.get('/users', adminAuth, async (req, res) => {
   }
 });
 
-// الحصول على جميع الحجوزات
+// Get all bookings
 router.get('/bookings', adminAuth, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -111,8 +82,8 @@ router.get('/bookings', adminAuth, async (req, res) => {
     const skip = (page - 1) * limit;
     const status = req.query.status;
 
-    let filter = {};
-    if (status && ['pending', 'confirmed', 'cancelled'].includes(status)) {
+    const filter = {};
+    if (status) {
       filter.status = status;
     }
 
@@ -122,17 +93,15 @@ router.get('/bookings', adminAuth, async (req, res) => {
       .skip(skip)
       .limit(limit);
 
-    const totalBookings = await Booking.countDocuments(filter);
+    const total = await Booking.countDocuments(filter);
 
     res.json({
       success: true,
       bookings,
       pagination: {
         currentPage: page,
-        totalPages: Math.ceil(totalBookings / limit),
-        totalBookings,
-        hasNextPage: page < Math.ceil(totalBookings / limit),
-        hasPrevPage: page > 1
+        totalPages: Math.ceil(total / limit),
+        totalBookings: total
       }
     });
   } catch (error) {
@@ -141,17 +110,18 @@ router.get('/bookings', adminAuth, async (req, res) => {
   }
 });
 
-// تحديث حالة الحجز
+// Update booking status
 router.patch('/bookings/:id/status', adminAuth, async (req, res) => {
   try {
     const { status } = req.body;
-    
+    const bookingId = req.params.id;
+
     if (!['pending', 'confirmed', 'cancelled'].includes(status)) {
-      return res.status(400).json({ message: 'حالة غير صحيحة' });
+      return res.status(400).json({ message: 'حالة غير صالحة' });
     }
 
     const booking = await Booking.findByIdAndUpdate(
-      req.params.id,
+      bookingId,
       { status },
       { new: true }
     ).populate('user', 'name email phone');
@@ -171,11 +141,12 @@ router.patch('/bookings/:id/status', adminAuth, async (req, res) => {
   }
 });
 
-// حذف حجز
+// Delete booking
 router.delete('/bookings/:id', adminAuth, async (req, res) => {
   try {
-    const booking = await Booking.findByIdAndDelete(req.params.id);
-    
+    const bookingId = req.params.id;
+
+    const booking = await Booking.findByIdAndDelete(bookingId);
     if (!booking) {
       return res.status(404).json({ message: 'الحجز غير موجود' });
     }
@@ -190,17 +161,19 @@ router.delete('/bookings/:id', adminAuth, async (req, res) => {
   }
 });
 
-// حذف مستخدم
+// Delete user
 router.delete('/users/:id', adminAuth, async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    
+    const userId = req.params.id;
+
+    // Delete user's bookings first
+    await Booking.deleteMany({ user: userId });
+
+    // Delete user
+    const user = await User.findByIdAndDelete(userId);
     if (!user) {
       return res.status(404).json({ message: 'المستخدم غير موجود' });
     }
-
-    // حذف جميع حجوزات المستخدم
-    await Booking.deleteMany({ user: req.params.id });
 
     res.json({
       success: true,
@@ -212,16 +185,16 @@ router.delete('/users/:id', adminAuth, async (req, res) => {
   }
 });
 
-// البحث في المستخدمين
+// Search users
 router.get('/users/search', adminAuth, async (req, res) => {
   try {
     const { q } = req.query;
-    
     if (!q) {
-      return res.status(400).json({ message: 'يرجى إدخال كلمة البحث' });
+      return res.status(400).json({ message: 'يجب إدخال نص البحث' });
     }
 
     const users = await User.find({
+      role: { $ne: 'admin' },
       $or: [
         { name: { $regex: q, $options: 'i' } },
         { email: { $regex: q, $options: 'i' } },
@@ -235,22 +208,22 @@ router.get('/users/search', adminAuth, async (req, res) => {
     });
   } catch (error) {
     console.error('Search users error:', error);
-    res.status(500).json({ message: 'حدث خطأ أثناء البحث' });
+    res.status(500).json({ message: 'حدث خطأ أثناء البحث عن المستخدمين' });
   }
 });
 
-// البحث في الحجوزات
+// Search bookings
 router.get('/bookings/search', adminAuth, async (req, res) => {
   try {
     const { q, status, service, date } = req.query;
     
-    let filter = {};
+    const filter = {};
     
-    if (status && ['pending', 'confirmed', 'cancelled'].includes(status)) {
+    if (status) {
       filter.status = status;
     }
     
-    if (service && ['individual', 'couples', 'family', 'anxiety', 'depression'].includes(service)) {
+    if (service) {
       filter.service = service;
     }
     
@@ -264,7 +237,7 @@ router.get('/bookings/search', adminAuth, async (req, res) => {
 
     let bookings;
     if (q) {
-      // البحث في المستخدمين أولاً
+      // Search in user details
       const users = await User.find({
         $or: [
           { name: { $regex: q, $options: 'i' } },
@@ -274,13 +247,7 @@ router.get('/bookings/search', adminAuth, async (req, res) => {
       }).select('_id');
 
       const userIds = users.map(user => user._id);
-      
-      filter.$or = [
-        { user: { $in: userIds } },
-        { name: { $regex: q, $options: 'i' } },
-        { email: { $regex: q, $options: 'i' } },
-        { phone: { $regex: q, $options: 'i' } }
-      ];
+      filter.user = { $in: userIds };
     }
 
     bookings = await Booking.find(filter)
@@ -294,7 +261,7 @@ router.get('/bookings/search', adminAuth, async (req, res) => {
     });
   } catch (error) {
     console.error('Search bookings error:', error);
-    res.status(500).json({ message: 'حدث خطأ أثناء البحث' });
+    res.status(500).json({ message: 'حدث خطأ أثناء البحث عن الحجوزات' });
   }
 });
 

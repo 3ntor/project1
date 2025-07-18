@@ -1,53 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const Booking = require('../models/Booking');
 const User = require('../models/User');
-const Admin = require('../models/Admin');
+const { auth, adminAuth } = require('../middleware/auth');
 
-// وسطاء التحقق من التوثيق
-const auth = (req, res, next) => {
-  try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    if (!token) {
-      return res.status(401).json({ message: 'الرجاء تسجيل الدخول أولاً' });
-    }
-    
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    res.status(401).json({ message: 'الرجاء تسجيل الدخول أولاً' });
-  }
-};
-
-// وسطاء التحقق من صلاحيات الإدارة
-const adminAuth = async (req, res, next) => {
-  try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    if (!token) {
-      return res.status(401).json({ message: 'الرجاء تسجيل الدخول أولاً' });
-    }
-    
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    // التحقق من وجود adminId في التوكن
-    if (decoded.adminId) {
-      const admin = await Admin.findById(decoded.adminId);
-      if (!admin) {
-        return res.status(403).json({ message: 'غير مصرح لك بالوصول' });
-      }
-      req.admin = admin;
-      next();
-    } else {
-      return res.status(403).json({ message: 'غير مصرح لك بالوصول' });
-    }
-  } catch (error) {
-    res.status(401).json({ message: 'الرجاء تسجيل الدخول أولاً' });
-  }
-};
-
-// إنشاء حجز جديد (للمستخدمين المسجلين فقط)
+// حجز جلسة جديدة
 router.post('/', auth, async (req, res) => {
   try {
     const { name, email, phone, service, date, time, notes } = req.body;
@@ -58,14 +15,14 @@ router.post('/', auth, async (req, res) => {
       return res.status(404).json({ message: 'المستخدم غير موجود' });
     }
 
-    // التحقق من صحة البيانات
+    // التحقق من البيانات المطلوبة
     if (!name || !email || !phone || !service || !date || !time) {
       return res.status(400).json({ message: 'جميع الحقول المطلوبة يجب ملؤها' });
     }
 
-    // التحقق من عدم وجود حجز في نفس التاريخ والوقت
-    const existingBooking = await Booking.findOne({ 
-      date: new Date(date), 
+    // التحقق من عدم وجود حجز في نفس الوقت والتاريخ
+    const existingBooking = await Booking.findOne({
+      date: new Date(date),
       time: time,
       status: { $ne: 'cancelled' }
     });
@@ -74,7 +31,6 @@ router.post('/', auth, async (req, res) => {
       return res.status(400).json({ message: 'هذا الموعد محجوز بالفعل' });
     }
 
-    // إنشاء الحجز
     const booking = new Booking({
       user: user._id,
       name,
@@ -99,140 +55,160 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// عرض حجوزات المستخدم الحالي فقط
+// جلب حجوزات المستخدم الحالي فقط
 router.get('/my-bookings', auth, async (req, res) => {
   try {
-    const bookings = await Booking.find({ user: req.user.userId })
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'المستخدم غير موجود' });
+    }
+
+    const bookings = await Booking.find({ user: user._id })
       .sort({ createdAt: -1 });
-    
+
     res.json({
       success: true,
       bookings
     });
   } catch (error) {
-    console.error('Get bookings error:', error);
+    console.error('Error fetching user bookings:', error);
     res.status(500).json({ message: 'حدث خطأ أثناء جلب الحجوزات' });
   }
 });
 
-// عرض جميع الحجوزات (للإدارة فقط)
+// جلب جميع الحجوزات (للأدمن فقط)
 router.get('/all', adminAuth, async (req, res) => {
   try {
-    const bookings = await Booking.find()
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const status = req.query.status;
+
+    const filter = {};
+    if (status) {
+      filter.status = status;
+    }
+
+    const bookings = await Booking.find(filter)
       .populate('user', 'name email phone')
-      .sort({ createdAt: -1 });
-    
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const total = await Booking.countDocuments(filter);
+
     res.json({
       success: true,
-      bookings
+      bookings,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        totalBookings: total
+      }
     });
   } catch (error) {
-    console.error('Get all bookings error:', error);
+    console.error('Error fetching all bookings:', error);
     res.status(500).json({ message: 'حدث خطأ أثناء جلب الحجوزات' });
   }
 });
 
-// تحديث حالة الحجز (للمستخدم أو الإدارة)
+// تحديث حالة الحجز (للمستخدم الخاص أو الأدمن)
 router.patch('/:id', auth, async (req, res) => {
   try {
-    const { status } = req.body;
-    
-    // البحث عن الحجز
-    let booking = await Booking.findById(req.params.id);
+    const { status, notes } = req.body;
+    const bookingId = req.params.id;
+
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'المستخدم غير موجود' });
+    }
+
+    const booking = await Booking.findById(bookingId);
     if (!booking) {
       return res.status(404).json({ message: 'الحجز غير موجود' });
     }
 
-    // التحقق من الصلاحيات
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    // إذا كان المستخدم عادي، يمكنه تعديل حجوزاته فقط
-    if (decoded.userId && booking.user.toString() !== decoded.userId) {
+    // التحقق من الصلاحيات: المستخدم يمكنه تعديل حجوزاته فقط، الأدمن يمكنه تعديل جميع الحجوزات
+    if (user.role !== 'admin' && booking.user.toString() !== user._id.toString()) {
       return res.status(403).json({ message: 'غير مصرح لك بتعديل هذا الحجز' });
     }
 
-    // إذا كان إدارة، يمكنه تعديل أي حجز
-    if (decoded.adminId) {
-      const admin = await Admin.findById(decoded.adminId);
-      if (!admin) {
-        return res.status(403).json({ message: 'غير مصرح لك بالوصول' });
-      }
-    }
+    const updateData = {};
+    if (status) updateData.status = status;
+    if (notes !== undefined) updateData.notes = notes;
 
-    // تحديث الحالة
-    if (status && ['pending', 'confirmed', 'cancelled'].includes(status)) {
-      booking.status = status;
-      await booking.save();
-    }
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      bookingId,
+      updateData,
+      { new: true }
+    ).populate('user', 'name email phone');
 
     res.json({
       success: true,
       message: 'تم تحديث الحجز بنجاح',
-      booking
+      booking: updatedBooking
     });
   } catch (error) {
-    console.error('Update booking error:', error);
+    console.error('Error updating booking:', error);
     res.status(500).json({ message: 'حدث خطأ أثناء تحديث الحجز' });
   }
 });
 
-// حذف حجز (للمستخدم أو الإدارة)
+// حذف حجز (للمستخدم الخاص أو الأدمن)
 router.delete('/:id', auth, async (req, res) => {
   try {
-    const booking = await Booking.findById(req.params.id);
+    const bookingId = req.params.id;
+
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'المستخدم غير موجود' });
+    }
+
+    const booking = await Booking.findById(bookingId);
     if (!booking) {
       return res.status(404).json({ message: 'الحجز غير موجود' });
     }
 
-    // التحقق من الصلاحيات
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    // إذا كان المستخدم عادي، يمكنه حذف حجوزاته فقط
-    if (decoded.userId && booking.user.toString() !== decoded.userId) {
+    // التحقق من الصلاحيات: المستخدم يمكنه حذف حجوزاته فقط، الأدمن يمكنه حذف جميع الحجوزات
+    if (user.role !== 'admin' && booking.user.toString() !== user._id.toString()) {
       return res.status(403).json({ message: 'غير مصرح لك بحذف هذا الحجز' });
     }
 
-    // إذا كان إدارة، يمكنه حذف أي حجز
-    if (decoded.adminId) {
-      const admin = await Admin.findById(decoded.adminId);
-      if (!admin) {
-        return res.status(403).json({ message: 'غير مصرح لك بالوصول' });
-      }
-    }
-
-    await Booking.findByIdAndDelete(req.params.id);
+    await Booking.findByIdAndDelete(bookingId);
 
     res.json({
       success: true,
       message: 'تم حذف الحجز بنجاح'
     });
   } catch (error) {
-    console.error('Delete booking error:', error);
+    console.error('Error deleting booking:', error);
     res.status(500).json({ message: 'حدث خطأ أثناء حذف الحجز' });
   }
 });
 
-// الحصول على الأوقات المتاحة لتاريخ معين
+// جلب الأوقات المتاحة لتاريخ معين
 router.get('/available-times/:date', async (req, res) => {
   try {
     const { date } = req.params;
-    
-    // الأوقات المتاحة
-    const allTimeSlots = [
+    const selectedDate = new Date(date);
+
+    // الأوقات المتاحة (من 9 صباحاً إلى 6 مساءً)
+    const availableSlots = [
       '09:00', '10:00', '11:00', '12:00',
       '14:00', '15:00', '16:00', '17:00', '18:00'
     ];
 
-    // البحث عن الحجوزات في هذا التاريخ
+    // جلب الحجوزات المؤكدة والمعلقة لهذا التاريخ
     const bookedSlots = await Booking.find({
-      date: new Date(date),
-      status: { $ne: 'cancelled' }
+      date: {
+        $gte: new Date(selectedDate.setHours(0, 0, 0, 0)),
+        $lt: new Date(selectedDate.setHours(23, 59, 59, 999))
+      },
+      status: { $in: ['pending', 'confirmed'] }
     }).select('time');
 
     const bookedTimes = bookedSlots.map(booking => booking.time);
-    const availableTimes = allTimeSlots.filter(time => !bookedTimes.includes(time));
+    const availableTimes = availableSlots.filter(time => !bookedTimes.includes(time));
 
     res.json({
       success: true,
@@ -240,7 +216,7 @@ router.get('/available-times/:date', async (req, res) => {
       bookedTimes
     });
   } catch (error) {
-    console.error('Get available times error:', error);
+    console.error('Error fetching available times:', error);
     res.status(500).json({ message: 'حدث خطأ أثناء جلب الأوقات المتاحة' });
   }
 });
