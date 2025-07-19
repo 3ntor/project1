@@ -30,7 +30,18 @@ const SignUp = () => {
       
       if (shouldRedirectToBooking && from === '/booking') {
         navigate('/booking', { 
-          state: { selectedService: location.state?.selectedService },
+          state: { 
+            selectedService: location.state?.selectedService,
+            bookingData: location.state?.bookingData
+          },
+          replace: true 
+        });
+      } else if (location.state?.bookingData) {
+        // If there's booking data, go to booking page
+        navigate('/booking', { 
+          state: { 
+            bookingData: location.state.bookingData
+          },
           replace: true 
         });
       } else {
@@ -82,6 +93,15 @@ const SignUp = () => {
             },
             replace: true 
           });
+        } else if (location.state?.bookingData) {
+          // If there's booking data, go to booking page
+          navigate('/booking', { 
+            state: { 
+              fromSignup: true,
+              bookingData: location.state.bookingData
+            },
+            replace: true 
+          });
         } else {
           navigate('/');
         }
@@ -104,7 +124,12 @@ const SignUp = () => {
             <h2>{t('auth.signup.title')}</h2>
             {location.state?.redirectToBooking && (
               <p className="redirect-message">
-                {t('auth.signup.bookingRedirect') || 'بعد التسجيل، سيتم توجيهك إلى صفحة الحجز'}
+                {t('auth.signup.bookingRedirect') || 'بعد إنشاء الحساب، سيتم توجيهك إلى صفحة الحجز لإتمام الحجز'}
+              </p>
+            )}
+            {location.state?.bookingData && (
+              <p className="booking-data-message">
+                تم حفظ بيانات الحجز الخاصة بك، ستتمكن من إتمام الحجز بعد إنشاء الحساب
               </p>
             )}
           </div>

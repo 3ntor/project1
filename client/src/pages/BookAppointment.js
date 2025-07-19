@@ -105,10 +105,10 @@ const BookAppointment = () => {
 
     // Check if user is authenticated
     if (!isAuthenticated()) {
-      setError('يجب تسجيل الدخول أولاً لإتمام الحجز');
+      setError('يجب إنشاء حساب أولاً لإتمام الحجز');
       setLoading(false);
-      // Redirect to login with booking data
-      navigate('/login', { 
+      // Redirect to signup with booking data
+      navigate('/signup', { 
         state: { 
           from: location, 
           redirectToBooking: true,
@@ -321,7 +321,7 @@ const BookAppointment = () => {
                 disabled={loading}
               >
                 {loading ? t('common.loading') : 
-                 isAuthenticated() ? t('booking.form.submit') : 'تسجيل الدخول للحجز'}
+                 isAuthenticated() ? t('booking.form.submit') : 'إنشاء حساب للحجز'}
               </button>
             </form>
           </div>
