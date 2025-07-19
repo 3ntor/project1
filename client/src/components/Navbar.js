@@ -54,11 +54,9 @@ const Navbar = () => {
             {t('navbar.contact')}
           </Link>
           
-          {isAuthenticated() && (
-            <Link to="/booking" className="nav-link nav-booking" onClick={closeMenu}>
-              {t('navbar.booking')}
-            </Link>
-          )}
+          <Link to="/booking" className="nav-link nav-booking" onClick={closeMenu}>
+            {t('navbar.booking')}
+          </Link>
 
           {isAuthenticated() ? (
             <div className="nav-auth">

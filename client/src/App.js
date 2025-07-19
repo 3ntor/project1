@@ -44,15 +44,8 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
                 
-                {/* Protected Routes - Registered Users Only (NOT Guests) */}
-                <Route 
-                  path="/booking" 
-                  element={
-                    <ProtectedRoute requireAuth={true}>
-                      <BookAppointment />
-                    </ProtectedRoute>
-                  } 
-                />
+                {/* Booking Route - Accessible to all users, but booking requires authentication */}
+                <Route path="/booking" element={<BookAppointment />} />
                 
                                        {/* Admin Only Routes - Admin Users Only */}
                        <Route 

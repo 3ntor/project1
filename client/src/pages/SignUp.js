@@ -77,7 +77,8 @@ const SignUp = () => {
           navigate('/booking', { 
             state: { 
               selectedService: location.state?.selectedService,
-              fromSignup: true
+              fromSignup: true,
+              bookingData: location.state?.bookingData
             },
             replace: true 
           });
