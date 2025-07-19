@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const BlogPost = require('../models/BlogPost');
+const { adminAuth } = require('../middleware/auth');
 
 // Get all published blog posts
 router.get('/', async (req, res) => {
@@ -80,9 +81,12 @@ router.get('/:slug', async (req, res) => {
 });
 
 // Create new blog post (Admin only)
-router.post('/', async (req, res) => {
+router.post('/', adminAuth, async (req, res) => {
   try {
     const { title, excerpt, content, featuredImage, category, tags, readTime } = req.body;
+    
+    // Use the admin user ID from the token
+    const adminUserId = req.user ? req.user._id : '687bfc9b1c7a01c1ee0b74a9'; // Default admin ID
     
     const post = new BlogPost({
       title,
@@ -92,7 +96,7 @@ router.post('/', async (req, res) => {
       category,
       tags: tags || [],
       readTime: readTime || 5,
-      author: req.body.authorId || '64f8b2c1a2b3c4d5e6f7g8h9', // Mock author ID
+      author: adminUserId,
       isPublished: req.body.isPublished || false,
       isFeatured: req.body.isFeatured || false
     });
