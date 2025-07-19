@@ -16,6 +16,8 @@ const Admin = () => {
   const [users, setUsers] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [blogPosts, setBlogPosts] = useState([]);
+  const [contactMessages, setContactMessages] = useState([]);
+  const [contactStats, setContactStats] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -45,6 +47,7 @@ const Admin = () => {
       setLoading(true);
       const response = await axios.get('/api/admin/dashboard/stats');
       setStats(response.data.stats || {});
+      await loadContactStats();
     } catch (error) {
       console.error('Error loading dashboard data:', error);
       setError('Failed to load dashboard data');
@@ -92,6 +95,28 @@ const Admin = () => {
     }
   };
 
+  const loadContactMessages = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('/api/contact/admin');
+      setContactMessages(response.data.contacts || []);
+    } catch (error) {
+      console.error('Error loading contact messages:', error);
+      setError('Failed to load contact messages');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadContactStats = async () => {
+    try {
+      const response = await axios.get('/api/contact/admin/stats/overview');
+      setContactStats(response.data || {});
+    } catch (error) {
+      console.error('Error loading contact stats:', error);
+    }
+  };
+
   const handleTabChange = async (tab) => {
     setActiveTab(tab);
     setError('');
@@ -108,6 +133,10 @@ const Admin = () => {
         break;
       case 'blog':
         await loadBlogPosts();
+        break;
+      case 'contacts':
+        await loadContactMessages();
+        await loadContactStats();
         break;
       default:
         break;
@@ -149,6 +178,56 @@ const Admin = () => {
         console.error('Error deleting blog post:', error);
         setError('Failed to delete blog post');
       }
+    }
+  };
+
+  const handleContactStatusUpdate = async (messageId, status, notes = '') => {
+    try {
+      await axios.put(`/api/contact/admin/${messageId}/status`, { status, adminNotes: notes });
+      await loadContactMessages();
+      await loadContactStats();
+      setSuccess('Contact message status updated successfully');
+    } catch (error) {
+      console.error('Error updating contact status:', error);
+      setError('Failed to update contact status');
+    }
+  };
+
+  const handleContactReply = async (messageId, notes) => {
+    try {
+      await axios.put(`/api/contact/admin/${messageId}/reply`, { adminNotes: notes });
+      await loadContactMessages();
+      await loadContactStats();
+      setSuccess('Contact message marked as replied');
+    } catch (error) {
+      console.error('Error replying to contact:', error);
+      setError('Failed to reply to contact');
+    }
+  };
+
+  const handleDeleteContact = async (messageId) => {
+    if (window.confirm('Are you sure you want to delete this contact message?')) {
+      try {
+        await axios.delete(`/api/contact/admin/${messageId}`);
+        await loadContactMessages();
+        await loadContactStats();
+        setSuccess('Contact message deleted successfully');
+      } catch (error) {
+        console.error('Error deleting contact message:', error);
+        setError('Failed to delete contact message');
+      }
+    }
+  };
+
+  const handleViewContact = (messageId) => {
+    // TODO: Implement contact detail view
+    console.log('View contact:', messageId);
+  };
+
+  const handleReplyContact = (messageId) => {
+    const notes = prompt('أدخل ملاحظات الرد:');
+    if (notes) {
+      handleContactReply(messageId, notes);
     }
   };
 
@@ -283,6 +362,12 @@ const Admin = () => {
           >
             {t('admin.sections.blog')}
           </button>
+          <button
+            className={`tab-button ${activeTab === 'contacts' ? 'active' : ''}`}
+            onClick={() => handleTabChange('contacts')}
+          >
+            رسائل التواصل
+          </button>
         </div>
 
         {error && (
@@ -343,6 +428,16 @@ const Admin = () => {
                       <h3>{t('admin.stats.totalPosts')}</h3>
                       <p className="stat-number">{stats.totalPosts || 0}</p>
                       <p className="stat-label">{t('admin.stats.blogPosts') || 'Blog Posts'}</p>
+                    </div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-icon">
+                      <FaUser />
+                    </div>
+                    <div className="stat-content">
+                      <h3>رسائل التواصل</h3>
+                      <p className="stat-number">{contactStats.new || 0}</p>
+                      <p className="stat-label">رسائل جديدة</p>
                     </div>
                   </div>
                 </div>
@@ -680,6 +775,125 @@ const Admin = () => {
                       ))}
                     </tbody>
                   </table>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'contacts' && (
+              <div className="contacts-section">
+                <div className="section-header">
+                  <h2>إدارة رسائل التواصل</h2>
+                  <div className="contact-stats">
+                    <div className="stat-item">
+                      <span className="stat-label">إجمالي الرسائل:</span>
+                      <span className="stat-value">{contactStats.total || 0}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">رسائل جديدة:</span>
+                      <span className="stat-value new">{contactStats.new || 0}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">تم الرد عليها:</span>
+                      <span className="stat-value replied">{contactStats.replied || 0}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">رسائل الأسبوع:</span>
+                      <span className="stat-value recent">{contactStats.recent || 0}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="contacts-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>الاسم</th>
+                        <th>البريد الإلكتروني</th>
+                        <th>الهاتف</th>
+                        <th>الموضوع</th>
+                        <th>الحالة</th>
+                        <th>التاريخ</th>
+                        <th>الإجراءات</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {contactMessages.map(message => (
+                        <tr key={message._id} className={`message-row ${message.status}`}>
+                          <td>
+                            <div className="contact-info">
+                              <div className="contact-avatar">
+                                {message.name.charAt(0).toUpperCase()}
+                              </div>
+                              <span>{message.name}</span>
+                            </div>
+                          </td>
+                          <td>{message.email}</td>
+                          <td>{message.phone}</td>
+                          <td>
+                            <div className="message-subject">
+                              <span className="subject-text">{message.subject}</span>
+                              {message.adminNotes && (
+                                <div className="admin-notes">
+                                  <small>ملاحظات: {message.adminNotes}</small>
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                          <td>
+                            <span className={`status ${message.status}`}>
+                              {message.status === 'new' && 'جديد'}
+                              {message.status === 'read' && 'مقروء'}
+                              {message.status === 'replied' && 'تم الرد'}
+                              {message.status === 'archived' && 'مؤرشف'}
+                            </span>
+                          </td>
+                          <td>{formatDate(message.createdAt)}</td>
+                          <td>
+                            <div className="action-buttons">
+                              <button
+                                className="view-button"
+                                onClick={() => handleViewContact(message._id)}
+                                title="عرض التفاصيل"
+                              >
+                                <FaEye />
+                              </button>
+                              {message.status === 'new' && (
+                                <button
+                                  className="read-button"
+                                  onClick={() => handleContactStatusUpdate(message._id, 'read')}
+                                  title="تحديد كمقروء"
+                                >
+                                  <FaEdit />
+                                </button>
+                              )}
+                              {message.status !== 'replied' && (
+                                <button
+                                  className="reply-button"
+                                  onClick={() => handleReplyContact(message._id)}
+                                  title="الرد على الرسالة"
+                                >
+                                  <FaEdit />
+                                </button>
+                              )}
+                              <button
+                                className="delete-button"
+                                onClick={() => handleDeleteContact(message._id)}
+                                title="حذف الرسالة"
+                              >
+                                <FaTrash />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  
+                  {contactMessages.length === 0 && (
+                    <div className="no-data">
+                      <p>لا توجد رسائل تواصل</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}

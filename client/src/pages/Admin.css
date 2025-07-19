@@ -953,3 +953,192 @@
     align-items: flex-start;
   }
 }
+
+/* Contact Messages Styles */
+.contacts-section {
+  padding: 2rem;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+}
+
+.contact-stats {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  min-width: 120px;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #495057;
+}
+
+.stat-value.new {
+  color: #dc3545;
+}
+
+.stat-value.replied {
+  color: #28a745;
+}
+
+.stat-value.recent {
+  color: #007bff;
+}
+
+.contacts-table {
+  overflow-x: auto;
+}
+
+.contacts-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.contacts-table th,
+.contacts-table td {
+  padding: 1rem;
+  text-align: right;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.contacts-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+.message-row {
+  transition: all 0.3s ease;
+}
+
+.message-row:hover {
+  background: #f8f9fa;
+}
+
+.message-row.new {
+  background: #fff3cd;
+}
+
+.message-row.read {
+  background: #d1ecf1;
+}
+
+.message-row.replied {
+  background: #d4edda;
+}
+
+.contact-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.contact-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.message-subject {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.subject-text {
+  font-weight: 500;
+  color: #495057;
+}
+
+.admin-notes {
+  font-size: 0.85rem;
+  color: #6c757d;
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 5px;
+  border-right: 3px solid #007bff;
+}
+
+.status.new {
+  background: #dc3545;
+  color: white;
+}
+
+.status.read {
+  background: #ffc107;
+  color: #212529;
+}
+
+.status.replied {
+  background: #28a745;
+  color: white;
+}
+
+.status.archived {
+  background: #6c757d;
+  color: white;
+}
+
+.read-button,
+.reply-button {
+  background: #17a2b8;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 0.25rem;
+}
+
+.read-button:hover,
+.reply-button:hover {
+  background: #138496;
+  transform: translateY(-2px);
+}
+
+/* RTL Support for Contacts */
+.rtl .contacts-table th,
+.rtl .contacts-table td {
+  text-align: right;
+}
+
+.rtl .contact-info {
+  flex-direction: row;
+}
+
+.rtl .message-subject {
+  align-items: flex-end;
+}
+
+.rtl .admin-notes {
+  border-right: 3px solid #007bff;
+  border-left: none;
+}

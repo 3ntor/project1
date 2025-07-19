@@ -26,6 +26,22 @@ const contactSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  status: {
+    type: String,
+    enum: ['new', 'read', 'replied', 'archived'],
+    default: 'new'
+  },
+  adminNotes: {
+    type: String,
+    trim: true
+  },
+  repliedAt: {
+    type: Date
+  },
+  repliedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   createdAt: {
     type: Date,
     default: Date.now
