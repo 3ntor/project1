@@ -99,8 +99,6 @@ router.post('/login', async (req, res) => {
 router.post('/admin/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    
-    console.log('Login attempt:', { email });
 
     // التحقق من وجود المدير
     const admin = await User.findOne({ 
@@ -108,16 +106,13 @@ router.post('/admin/login', async (req, res) => {
       role: 'admin'
     });
     if (!admin) {
-      console.log('Admin account not found');
       return res.status(401).json({ message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
     }
 
     // التحقق من كلمة المرور
     const isMatch = await admin.comparePassword(password);
-    console.log('Password match result:', isMatch);
     
     if (!isMatch) {
-      console.log('Password mismatch');
       return res.status(401).json({ message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
     }
 
@@ -128,7 +123,6 @@ router.post('/admin/login', async (req, res) => {
       { expiresIn: process.env.JWT_EXPIRE }
     );
 
-    console.log('Login successful');
     res.json({
       token,
       user: {
