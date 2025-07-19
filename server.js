@@ -70,9 +70,15 @@ app.use(limiter);
 // MongoDB Connection
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nafsyetak-clinic', {
+    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/nafsyetak-clinic';
+    console.log('Attempting to connect to MongoDB...');
+    console.log('MongoDB URI:', mongoURI);
+    
+    const conn = await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
     });
     
     console.log(`MongoDB Connected: ${conn.connection.host}`);
@@ -81,13 +87,44 @@ const connectDB = async () => {
     await createAdminIfNotExists();
     
   } catch (error) {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
+    console.error('MongoDB connection error:', error.message);
+    console.log('');
+    console.log('🔥 SOLUTION: MongoDB is not running! Please do one of the following:');
+    console.log('1. Install and start MongoDB locally:');
+    console.log('   - Install: sudo apt install mongodb-org');
+    console.log('   - Start: sudo systemctl start mongod');
+    console.log('');
+    console.log('2. Or use MongoDB Atlas (cloud):');
+    console.log('   - Sign up at https://cloud.mongodb.com');
+    console.log('   - Get connection string and update MONGODB_URI in .env file');
+    console.log('');
+    console.log('3. Or use a local MongoDB container:');
+    console.log('   - docker run -d -p 27017:27017 --name mongodb mongo:latest');
+    console.log('');
+    console.log('The server will continue running but database operations will fail.');
+    console.log('Please fix the MongoDB connection and restart the server.');
+    console.log('');
   }
 };
 
 // Connect to database
 connectDB();
+
+// Database connection check middleware
+const checkDBConnection = (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({ 
+      success: false,
+      message: 'قاعدة البيانات غير متاحة حالياً',
+      error: 'Database connection not available. Please check MongoDB connection.',
+      helpText: 'يرجى التأكد من تشغيل MongoDB أو التحقق من إعدادات الاتصال'
+    });
+  }
+  next();
+};
+
+// Apply database check to API routes
+app.use('/api', checkDBConnection);
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));

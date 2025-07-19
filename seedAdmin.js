@@ -1,39 +1,59 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const Admin = require('./models/Admin');
+const User = require('./models/User');
+require('dotenv').config();
 
-mongoose.connect('mongodb+srv://ahmed:ahmed123@project.qemt8bn.mongodb.net/?retryWrites=true&w=majority&appName=project', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
-  console.log('Connected to MongoDB');
-  
-  // بيانات الحساب الإداري الثابت
-  const adminData = {
-    username: 'admin',
-    password: 'admin123',
-    role: 'admin'
-  };
-
-  // تشفير كلمة المرور
-  bcrypt.hash(adminData.password, 10)
-    .then(hashedPassword => {
-      adminData.password = hashedPassword;
-
-      // إنشاء حساب المدير
-      const admin = new Admin(adminData);
-      return admin.save();
-    })
-    .then(() => {
-      console.log('Admin account created successfully');
-      mongoose.disconnect();
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      mongoose.disconnect();
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nafsyetak-clinic', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     });
-})
-.catch(error => {
-  console.error('Connection error:', error);
-});
+    console.log('Connected to MongoDB');
+  } catch (error) {
+    console.error('Connection error:', error);
+    process.exit(1);
+  }
+};
+
+const createAdmin = async () => {
+  try {
+    // Check if admin already exists
+    const existingAdmin = await User.findOne({ 
+      email: process.env.ADMIN_EMAIL || 'admin@nafsyetak.com',
+      role: 'admin'
+    });
+    
+    if (existingAdmin) {
+      console.log('Admin account already exists, deleting old one...');
+      await User.deleteOne({ _id: existingAdmin._id });
+    }
+    
+    // Create new admin
+    const adminData = {
+      name: 'Administrator',
+      email: process.env.ADMIN_EMAIL || 'admin@nafsyetak.com',
+      password: process.env.ADMIN_PASSWORD || 'admin123',
+      phone: '+20 123 456 7890',
+      role: 'admin'
+    };
+    
+    const admin = new User(adminData);
+    await admin.save();
+    
+    console.log(`Admin account created successfully with email: ${adminData.email}`);
+    console.log(`Password: ${adminData.password}`);
+    
+  } catch (error) {
+    console.error('Error creating admin:', error);
+  } finally {
+    mongoose.disconnect();
+  }
+};
+
+const main = async () => {
+  await connectDB();
+  await createAdmin();
+};
+
+main();
