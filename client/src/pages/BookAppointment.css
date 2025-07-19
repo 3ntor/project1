@@ -1,79 +1,62 @@
-.appointment-hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 100px 0;
+/* Booking Page Styles */
+.booking-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 40px 20px;
 }
 
-/* Appointment Content */
-.appointment-content {
+.booking-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.booking-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.booking-header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.booking-header p {
+  font-size: 1.1rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.booking-content {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 50px;
-  margin-top: 50px;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
 }
 
-/* Appointment Form */
-.appointment-form-container {
+.booking-form-section {
   background: white;
-  padding: 40px;
+  padding: 30px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-.appointment-form-container h2 {
-  font-size: 2rem;
+.booking-form-section h2 {
+  font-size: 1.8rem;
   color: #333;
-  margin-bottom: 15px;
+  margin-bottom: 25px;
+  text-align: center;
 }
 
-.appointment-form-container > p {
-  color: #666;
-  margin-bottom: 30px;
-}
-
-.success-message {
-  background: #d4edda;
-  color: #155724;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  border: 1px solid #c3e6cb;
-}
-
-.error-message {
-  background: #f8d7da;
-  color: #721c24;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  border: 1px solid #f5c6cb;
-}
-
-.appointment-form {
+.booking-form {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
 }
 
-.form-section {
-  border: 1px solid #e1e5e9;
-  border-radius: 10px;
-  padding: 25px;
-  background: #f8f9fa;
-}
-
-.form-section h3 {
-  font-size: 1.2rem;
-  color: #333;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.form-section h3 svg {
-  color: #667eea;
-}
-
+/* Form Styles */
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -113,207 +96,215 @@
   min-height: 100px;
 }
 
-/* Calendar Section */
-.calendar-section {
-  margin-top: 20px;
-}
-
-.calendar-section h4 {
-  color: #333;
-  font-size: 1.1rem;
-  margin-bottom: 15px;
-  text-align: center;
-  font-weight: 600;
-}
-
-/* Selected Service Details */
-.selected-service-details {
-  margin-top: 20px;
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  border: 2px solid #667eea;
-}
-
-.selected-service-details h4 {
-  color: #667eea;
-  font-size: 1.1rem;
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.service-info-card {
-  background: #f8f9fa;
+.success-message {
+  background: #d4edda;
+  color: #155724;
   padding: 15px;
   border-radius: 8px;
-  border-left: 4px solid #667eea;
+  margin-bottom: 20px;
+  border: 1px solid #c3e6cb;
 }
 
-/* RTL Support for service info card */
-[dir="rtl"] .service-info-card {
-  border-left: none;
-  border-right: 4px solid #667eea;
+.error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #f5c6cb;
 }
 
-.service-info-card h5 {
-  color: #2c3e50;
+.booking-submit-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 8px;
   font-size: 1.1rem;
-  margin-bottom: 10px;
   font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
 }
 
-.service-info-card p {
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 15px;
+.booking-submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
-.service-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
+.booking-submit-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-.service-price {
-  background: #27ae60;
-  color: white;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 600;
+.my-bookings-section {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-.service-duration {
-  background: #3498db;
-  color: white;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-/* Appointment Info Sidebar */
-.appointment-info {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.appointment-info h2 {
+.my-bookings-section h2 {
   font-size: 1.8rem;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  text-align: center;
 }
 
-.info-cards {
+.no-bookings {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 20px;
+}
+
+.bookings-list {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.info-card {
-  background: white;
-  padding: 25px;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+.booking-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 4px solid #667eea;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.info-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-
-.info-icon {
-  font-size: 2.5rem;
-  margin-bottom: 15px;
-}
-
-.info-card h3 {
-  font-size: 1.2rem;
-  color: #333;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-
-.info-card p {
-  color: #666;
-  line-height: 1.6;
-}
-
-.contact-info-sidebar {
-  background: white;
-  padding: 25px;
-  border-radius: 15px;
+.booking-card:hover {
+  transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.contact-info-sidebar h3 {
-  font-size: 1.3rem;
+.booking-info h3 {
   color: #333;
+  font-size: 1.2rem;
   margin-bottom: 15px;
   font-weight: 600;
 }
 
-.contact-info-sidebar p {
+.booking-info p {
   color: #666;
-  margin-bottom: 20px;
-  line-height: 1.6;
+  margin-bottom: 8px;
+  line-height: 1.5;
 }
 
-.contact-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+.booking-info strong {
   color: #333;
+  font-weight: 600;
 }
 
-.contact-item svg {
-  color: #667eea;
-  font-size: 1.1rem;
+.status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status.confirmed {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status.cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.login-required {
+  text-align: center;
+  background: white;
+  padding: 60px 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 100px auto;
+}
+
+.login-required h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.login-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* RTL Support */
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.rtl .booking-card {
+  border-left: none;
+  border-right: 4px solid #667eea;
+}
+
+.rtl .form-group label {
+  text-align: right;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .appointment-content {
+  .booking-content {
     grid-template-columns: 1fr;
     gap: 30px;
   }
 
-  .appointment-form-container {
-    padding: 25px;
-  }
-
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .form-section {
+  .booking-form-section,
+  .my-bookings-section {
     padding: 20px;
   }
 
-  .calendar-section {
-    margin-top: 15px;
+  .booking-header h1 {
+    font-size: 2rem;
+  }
+
+  .booking-form-section h2,
+  .my-bookings-section h2 {
+    font-size: 1.5rem;
   }
 }
 
 @media (max-width: 480px) {
-  .appointment-form-container h2 {
-    font-size: 1.5rem;
+  .booking-page {
+    padding: 20px 10px;
   }
 
-  .appointment-info h2 {
-    font-size: 1.5rem;
+  .booking-header h1 {
+    font-size: 1.8rem;
   }
 
-  .info-card {
-    padding: 20px;
+  .booking-form-section,
+  .my-bookings-section {
+    padding: 15px;
   }
 
-  .contact-info-sidebar {
-    padding: 20px;
+  .form-row {
+    grid-template-columns: 1fr;
   }
 }

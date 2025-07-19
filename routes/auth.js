@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const Admin = require('../models/Admin');
 
 // تسجيل مستخدم جديد
 router.post('/register', async (req, res) => {
@@ -104,7 +103,10 @@ router.post('/admin/login', async (req, res) => {
     console.log('Login attempt:', { email });
 
     // التحقق من وجود المدير
-    const admin = await Admin.findOne({ email: process.env.ADMIN_EMAIL || 'admin@nafsyetak.com' });
+    const admin = await User.findOne({ 
+      email: email,
+      role: 'admin'
+    });
     if (!admin) {
       console.log('Admin account not found');
       return res.status(401).json({ message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
@@ -121,7 +123,7 @@ router.post('/admin/login', async (req, res) => {
 
     // إنشاء token
     const token = jwt.sign(
-      { adminId: admin._id },
+      { userId: admin._id },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRE }
     );
@@ -129,7 +131,13 @@ router.post('/admin/login', async (req, res) => {
     console.log('Login successful');
     res.json({
       token,
-      userType: 'admin'
+      user: {
+        id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        phone: admin.phone,
+        role: admin.role
+      }
     });
   } catch (error) {
     console.error('Admin login error:', error);
