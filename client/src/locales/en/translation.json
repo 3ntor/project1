@@ -139,6 +139,10 @@
         "Confidential and supportive environment"
       ]
     },
+    "individualTherapy": "Individual Therapy",
+    "couplesTherapy": "Couples Therapy",
+    "familyTherapy": "Family Therapy",
+    "groupTherapy": "Group Therapy",
     "couples": {
       "name": "Couples Therapy", 
       "description": "Specialized therapy to help couples improve communication, resolve conflicts, and strengthen their emotional connection and relationship satisfaction.",
@@ -398,18 +402,58 @@
   },
   "admin": {
     "title": "Admin Dashboard",
-    "welcome": "Welcome to Admin Panel",
-    "stats": {
-      "totalUsers": "Total Users",
-      "totalBookings": "Total Bookings", 
-      "totalPosts": "Blog Posts",
-      "pendingBookings": "Pending Bookings"
+    "welcome": "Welcome to the admin panel. Manage your website content and users.",
+    "dashboard": {
+      "title": "Dashboard Statistics",
+      "recentActivity": "Recent Activity",
+      "recentBookings": "Recent bookings will appear here",
+      "noRecentActivity": "No recent activity"
     },
     "sections": {
       "users": "Manage Users",
       "bookings": "Manage Bookings",
       "blog": "Manage Blog",
       "settings": "Settings"
+    },
+    "stats": {
+      "totalUsers": "Total Users",
+      "totalBookings": "Total Bookings",
+      "pendingBookings": "Pending Bookings",
+      "totalPosts": "Total Posts",
+      "registeredUsers": "Registered Users",
+      "totalAppointments": "Total Appointments",
+      "pendingAppointments": "Pending Appointments",
+      "blogPosts": "Blog Posts"
+    },
+    "users": {
+      "title": "User Management",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "joinDate": "Join Date",
+      "totalBookings": "Total Bookings",
+      "actions": "Actions",
+      "searchPlaceholder": "Search users by name, email, or phone...",
+      "noUsers": "No users found"
+    },
+    "bookings": {
+      "title": "Booking Management",
+      "user": "User",
+      "service": "Service",
+      "date": "Date",
+      "time": "Time",
+      "status": "Status",
+      "actions": "Actions",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "searchPlaceholder": "Search bookings...",
+      "allStatuses": "All Statuses",
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "allServices": "All Services",
+      "noBookings": "No bookings found",
+      "deleted": "Booking deleted successfully"
     },
     "blog": {
       "title": "Blog Management",
@@ -419,26 +463,8 @@
       "publishedAt": "Published",
       "actions": "Actions",
       "published": "Published",
-      "draft": "Draft"
-    },
-    "bookings": {
-      "title": "All Bookings",
-      "user": "User",
-      "service": "Service",
-      "date": "Date",
-      "time": "Time", 
-      "status": "Status",
-      "actions": "Actions",
-      "confirm": "Confirm",
-      "cancel": "Cancel"
-    },
-    "users": {
-      "title": "All Users",
-      "name": "Name",
-      "email": "Email",
-      "phone": "Phone",
-      "joinDate": "Join Date",
-      "actions": "Actions"
+      "draft": "Draft",
+      "deleted": "Blog post deleted successfully"
     }
   },
   "common": {

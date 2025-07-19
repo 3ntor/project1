@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaSearch, FaFilter, FaEye, FaEdit, FaTrash, FaCalendar, FaUser, FaBook, FaChartBar } from 'react-icons/fa';
 import axios from 'axios';
 import './Admin.css';
 
@@ -18,6 +18,16 @@ const Admin = () => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  
+  // Search and filter states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [serviceFilter, setServiceFilter] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
   const currentLanguage = i18n.language;
 
@@ -134,9 +144,84 @@ const Admin = () => {
         await axios.delete(`/api/blog/${postId}`);
         // Reload blog posts
         await loadBlogPosts();
+        setSuccess(t('admin.blog.deleted') || 'Blog post deleted successfully');
       } catch (error) {
         console.error('Error deleting blog post:', error);
         setError('Failed to delete blog post');
+      }
+    }
+  };
+
+  const handleSearchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`/api/admin/users/search?q=${searchTerm}`);
+      setUsers(response.data.users || []);
+    } catch (error) {
+      console.error('Error searching users:', error);
+      setError('Failed to search users');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearchBookings = async () => {
+    try {
+      setLoading(true);
+      const params = new URLSearchParams();
+      if (searchTerm) params.append('q', searchTerm);
+      if (statusFilter) params.append('status', statusFilter);
+      if (serviceFilter) params.append('service', serviceFilter);
+      if (dateFilter) params.append('date', dateFilter);
+      
+      const response = await axios.get(`/api/admin/bookings/search?${params}`);
+      setBookings(response.data.bookings || []);
+    } catch (error) {
+      console.error('Error searching bookings:', error);
+      setError('Failed to search bookings');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    // Reload data for the new page
+    switch (activeTab) {
+      case 'users':
+        loadUsers(page);
+        break;
+      case 'bookings':
+        loadBookings(page);
+        break;
+      case 'blog':
+        loadBlogPosts(page);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleViewUser = (userId) => {
+    // Navigate to user details page or show modal
+    console.log('View user:', userId);
+  };
+
+  const handleViewBooking = (bookingId) => {
+    // Navigate to booking details page or show modal
+    console.log('View booking:', bookingId);
+  };
+
+  const handleDeleteBooking = async (bookingId) => {
+    if (window.confirm(t('common.confirm'))) {
+      try {
+        await axios.delete(`/api/admin/bookings/${bookingId}`);
+        // Reload bookings
+        await loadBookings();
+        setSuccess(t('admin.bookings.deleted') || 'Booking deleted successfully');
+      } catch (error) {
+        console.error('Error deleting booking:', error);
+        setError('Failed to delete booking');
       }
     }
   };
@@ -206,29 +291,75 @@ const Admin = () => {
           </div>
         )}
 
+        {success && (
+          <div className="success-message">
+            {success}
+          </div>
+        )}
+
         {loading ? (
           <div className="loading">{t('common.loading')}</div>
         ) : (
           <div className="admin-content">
             {activeTab === 'dashboard' && (
               <div className="dashboard-section">
-                <h2>Dashboard Statistics</h2>
+                <h2>{t('admin.dashboard.title') || 'Dashboard Statistics'}</h2>
                 <div className="stats-grid">
                   <div className="stat-card">
-                    <h3>{t('admin.stats.totalUsers')}</h3>
-                    <p className="stat-number">{stats.totalUsers || 0}</p>
+                    <div className="stat-icon">
+                      <FaUser />
+                    </div>
+                    <div className="stat-content">
+                      <h3>{t('admin.stats.totalUsers')}</h3>
+                      <p className="stat-number">{stats.totalUsers || 0}</p>
+                      <p className="stat-label">{t('admin.stats.registeredUsers') || 'Registered Users'}</p>
+                    </div>
                   </div>
                   <div className="stat-card">
-                    <h3>{t('admin.stats.totalBookings')}</h3>
-                    <p className="stat-number">{stats.totalBookings || 0}</p>
+                    <div className="stat-icon">
+                      <FaCalendar />
+                    </div>
+                    <div className="stat-content">
+                      <h3>{t('admin.stats.totalBookings')}</h3>
+                      <p className="stat-number">{stats.totalBookings || 0}</p>
+                      <p className="stat-label">{t('admin.stats.totalAppointments') || 'Total Appointments'}</p>
+                    </div>
                   </div>
                   <div className="stat-card">
-                    <h3>{t('admin.stats.pendingBookings')}</h3>
-                    <p className="stat-number">{stats.pendingBookings || 0}</p>
+                    <div className="stat-icon">
+                      <FaChartBar />
+                    </div>
+                    <div className="stat-content">
+                      <h3>{t('admin.stats.pendingBookings')}</h3>
+                      <p className="stat-number">{stats.pendingBookings || 0}</p>
+                      <p className="stat-label">{t('admin.stats.pendingAppointments') || 'Pending Appointments'}</p>
+                    </div>
                   </div>
                   <div className="stat-card">
-                    <h3>{t('admin.stats.totalPosts')}</h3>
-                    <p className="stat-number">{stats.totalPosts || 0}</p>
+                    <div className="stat-icon">
+                      <FaBook />
+                    </div>
+                    <div className="stat-content">
+                      <h3>{t('admin.stats.totalPosts')}</h3>
+                      <p className="stat-number">{stats.totalPosts || 0}</p>
+                      <p className="stat-label">{t('admin.stats.blogPosts') || 'Blog Posts'}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Recent Activity */}
+                <div className="recent-activity">
+                  <h3>{t('admin.dashboard.recentActivity') || 'Recent Activity'}</h3>
+                  <div className="activity-list">
+                    <div className="activity-item">
+                      <div className="activity-icon">
+                        <FaCalendar />
+                      </div>
+                      <div className="activity-content">
+                        <p>{t('admin.dashboard.recentBookings') || 'Recent bookings will appear here'}</p>
+                        <span className="activity-time">{t('admin.dashboard.noRecentActivity') || 'No recent activity'}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -236,7 +367,23 @@ const Admin = () => {
 
             {activeTab === 'users' && (
               <div className="users-section">
-                <h2>{t('admin.users.title')}</h2>
+                <div className="section-header">
+                  <h2>{t('admin.users.title')}</h2>
+                  <div className="search-filters">
+                    <div className="search-box">
+                      <input
+                        type="text"
+                        placeholder={t('admin.users.searchPlaceholder') || 'Search users...'}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                      <button onClick={() => handleSearchUsers()}>
+                        <FaSearch />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
                 <div className="users-table">
                   <table>
                     <thead>
@@ -245,35 +392,138 @@ const Admin = () => {
                         <th>{t('admin.users.email')}</th>
                         <th>{t('admin.users.phone')}</th>
                         <th>{t('admin.users.joinDate')}</th>
+                        <th>{t('admin.users.totalBookings')}</th>
                         <th>{t('admin.users.actions')}</th>
                       </tr>
                     </thead>
                     <tbody>
                       {users.map(user => (
                         <tr key={user._id}>
-                          <td>{user.name}</td>
+                          <td>
+                            <div className="user-info">
+                              <div className="user-avatar">
+                                {user.name.charAt(0).toUpperCase()}
+                              </div>
+                              <span>{user.name}</span>
+                            </div>
+                          </td>
                           <td>{user.email}</td>
                           <td>{user.phone}</td>
                           <td>{formatDate(user.createdAt)}</td>
                           <td>
-                            <button
-                              className="delete-button"
-                              onClick={() => handleDeleteUser(user._id)}
-                            >
-                              {t('common.delete')}
-                            </button>
+                            <span className="booking-count">
+                              {user.totalBookings || 0}
+                            </span>
+                          </td>
+                          <td>
+                            <div className="action-buttons">
+                              <button
+                                className="view-button"
+                                onClick={() => handleViewUser(user._id)}
+                                title={t('common.view')}
+                              >
+                                <FaEye />
+                              </button>
+                              <button
+                                className="delete-button"
+                                onClick={() => handleDeleteUser(user._id)}
+                                title={t('common.delete')}
+                              >
+                                <FaTrash />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                  
+                  {users.length === 0 && (
+                    <div className="no-data">
+                      <p>{t('admin.users.noUsers') || 'No users found'}</p>
+                    </div>
+                  )}
                 </div>
+                
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="pagination">
+                    <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="page-btn"
+                    >
+                      {t('common.previous')}
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                      <button
+                        key={page}
+                        className={`page-btn ${currentPage === page ? 'active' : ''}`}
+                        onClick={() => handlePageChange(page)}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="page-btn"
+                    >
+                      {t('common.next')}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
             {activeTab === 'bookings' && (
               <div className="bookings-section">
-                <h2>{t('admin.bookings.title')}</h2>
+                <div className="section-header">
+                  <h2>{t('admin.bookings.title')}</h2>
+                  <div className="search-filters">
+                    <div className="search-box">
+                      <input
+                        type="text"
+                        placeholder={t('admin.bookings.searchPlaceholder') || 'Search bookings...'}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                      <button onClick={() => handleSearchBookings()}>
+                        <FaSearch />
+                      </button>
+                    </div>
+                    <div className="filters">
+                      <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="filter-select"
+                      >
+                        <option value="">{t('admin.bookings.allStatuses') || 'All Statuses'}</option>
+                        <option value="pending">{t('admin.bookings.pending') || 'Pending'}</option>
+                        <option value="confirmed">{t('admin.bookings.confirmed') || 'Confirmed'}</option>
+                        <option value="cancelled">{t('admin.bookings.cancelled') || 'Cancelled'}</option>
+                      </select>
+                      <select
+                        value={serviceFilter}
+                        onChange={(e) => setServiceFilter(e.target.value)}
+                        className="filter-select"
+                      >
+                        <option value="">{t('admin.bookings.allServices') || 'All Services'}</option>
+                        <option value="individual-therapy">{t('services.individualTherapy') || 'Individual Therapy'}</option>
+                        <option value="couples-therapy">{t('services.couplesTherapy') || 'Couples Therapy'}</option>
+                        <option value="family-therapy">{t('services.familyTherapy') || 'Family Therapy'}</option>
+                        <option value="group-therapy">{t('services.groupTherapy') || 'Group Therapy'}</option>
+                      </select>
+                      <input
+                        type="date"
+                        value={dateFilter}
+                        onChange={(e) => setDateFilter(e.target.value)}
+                        className="filter-date"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
                 <div className="bookings-table">
                   <table>
                     <thead>
@@ -289,34 +539,96 @@ const Admin = () => {
                     <tbody>
                       {bookings.map(booking => (
                         <tr key={booking._id}>
-                          <td>{booking.user?.name || booking.name}</td>
-                          <td>{booking.service}</td>
+                          <td>
+                            <div className="user-info">
+                              <div className="user-avatar">
+                                {(booking.user?.name || booking.name).charAt(0).toUpperCase()}
+                              </div>
+                              <div className="user-details">
+                                <span className="user-name">{booking.user?.name || booking.name}</span>
+                                <span className="user-email">{booking.user?.email || booking.email}</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <span className="service-badge">
+                              {t(`services.${booking.service}`) || booking.service}
+                            </span>
+                          </td>
                           <td>{formatDate(booking.date)}</td>
                           <td>{formatTime(booking.time)}</td>
                           <td>
                             <span className={`status ${booking.status}`}>
-                              {booking.status}
+                              {t(`admin.bookings.${booking.status}`) || booking.status}
                             </span>
                           </td>
                           <td>
-                            <button
-                              className="confirm-button"
-                              onClick={() => handleBookingStatusUpdate(booking._id, 'confirmed')}
-                            >
-                              {t('admin.bookings.confirm')}
-                            </button>
-                            <button
-                              className="cancel-button"
-                              onClick={() => handleBookingStatusUpdate(booking._id, 'cancelled')}
-                            >
-                              {t('admin.bookings.cancel')}
-                            </button>
+                            <div className="action-buttons">
+                              <button
+                                className="view-button"
+                                onClick={() => handleViewBooking(booking._id)}
+                                title={t('common.view')}
+                              >
+                                <FaEye />
+                              </button>
+                              {booking.status === 'pending' && (
+                                <button
+                                  className="confirm-button"
+                                  onClick={() => handleBookingStatusUpdate(booking._id, 'confirmed')}
+                                  title={t('admin.bookings.confirm')}
+                                >
+                                  <FaEdit />
+                                </button>
+                              )}
+                              <button
+                                className="delete-button"
+                                onClick={() => handleDeleteBooking(booking._id)}
+                                title={t('common.delete')}
+                              >
+                                <FaTrash />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                  
+                  {bookings.length === 0 && (
+                    <div className="no-data">
+                      <p>{t('admin.bookings.noBookings') || 'No bookings found'}</p>
+                    </div>
+                  )}
                 </div>
+                
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="pagination">
+                    <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="page-btn"
+                    >
+                      {t('common.previous')}
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                      <button
+                        key={page}
+                        className={`page-btn ${currentPage === page ? 'active' : ''}`}
+                        onClick={() => handlePageChange(page)}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="page-btn"
+                    >
+                      {t('common.next')}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
