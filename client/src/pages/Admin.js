@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import { FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 import './Admin.css';
 
@@ -68,6 +69,19 @@ const Admin = () => {
     }
   };
 
+  const loadBlogPosts = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('/api/blog');
+      setBlogPosts(response.data.posts || []);
+    } catch (error) {
+      console.error('Error loading blog posts:', error);
+      setError('Failed to load blog posts');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleTabChange = async (tab) => {
     setActiveTab(tab);
     setError('');
@@ -81,6 +95,9 @@ const Admin = () => {
         break;
       case 'bookings':
         await loadBookings();
+        break;
+      case 'blog':
+        await loadBlogPosts();
         break;
       default:
         break;
@@ -107,6 +124,19 @@ const Admin = () => {
       } catch (error) {
         console.error('Error deleting user:', error);
         setError('Failed to delete user');
+      }
+    }
+  };
+
+  const handleDeleteBlogPost = async (postId) => {
+    if (window.confirm(t('common.confirm'))) {
+      try {
+        await axios.delete(`/api/blog/${postId}`);
+        // Reload blog posts
+        await loadBlogPosts();
+      } catch (error) {
+        console.error('Error deleting blog post:', error);
+        setError('Failed to delete blog post');
       }
     }
   };
@@ -161,6 +191,12 @@ const Admin = () => {
             onClick={() => handleTabChange('bookings')}
           >
             {t('admin.sections.bookings')}
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'blog' ? 'active' : ''}`}
+            onClick={() => handleTabChange('blog')}
+          >
+            {t('admin.sections.blog')}
           </button>
         </div>
 
@@ -274,6 +310,58 @@ const Admin = () => {
                               onClick={() => handleBookingStatusUpdate(booking._id, 'cancelled')}
                             >
                               {t('admin.bookings.cancel')}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'blog' && (
+              <div className="blog-section">
+                <div className="section-header">
+                  <h2>{t('admin.blog.title') || 'Blog Management'}</h2>
+                  <Link to="/admin/blog/new" className="add-blog-btn">
+                    <FaPlus />
+                    {t('blog.addPost') || 'Add New Post'}
+                  </Link>
+                </div>
+                <div className="blog-posts-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>{t('admin.blog.title') || 'Title'}</th>
+                        <th>{t('admin.blog.category') || 'Category'}</th>
+                        <th>{t('admin.blog.status') || 'Status'}</th>
+                        <th>{t('admin.blog.views') || 'Views'}</th>
+                        <th>{t('admin.blog.publishedAt') || 'Published'}</th>
+                        <th>{t('admin.blog.actions') || 'Actions'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {blogPosts.map(post => (
+                        <tr key={post._id}>
+                          <td>{post.title}</td>
+                          <td>{post.category}</td>
+                          <td>
+                            <span className={`status ${post.isPublished ? 'published' : 'draft'}`}>
+                              {post.isPublished ? (t('admin.blog.published') || 'Published') : (t('admin.blog.draft') || 'Draft')}
+                            </span>
+                          </td>
+                          <td>{post.views || 0}</td>
+                          <td>{post.publishedAt ? formatDate(post.publishedAt) : '-'}</td>
+                          <td>
+                            <Link to={`/admin/blog/edit/${post._id}`} className="edit-button">
+                              {t('common.edit')}
+                            </Link>
+                            <button
+                              className="delete-button"
+                              onClick={() => handleDeleteBlogPost(post._id)}
+                            >
+                              {t('common.delete')}
                             </button>
                           </td>
                         </tr>

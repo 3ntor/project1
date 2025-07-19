@@ -268,13 +268,40 @@
     "readMore": "Read More",
     "backToBlog": "Back to Blog",
     "addPost": "Add New Post",
+    "searchPlaceholder": "Search articles...",
     "noArticles": "No blog articles available.",
+    "form": {
+      "createTitle": "Create New Blog Post",
+      "editTitle": "Edit Blog Post",
+      "title": "Post Title",
+      "titlePlaceholder": "Enter post title",
+      "category": "Category",
+      "selectCategory": "Select Category",
+      "excerpt": "Excerpt",
+      "excerptPlaceholder": "Enter post excerpt (max 200 characters)",
+      "content": "Content",
+      "contentPlaceholder": "Enter post content",
+      "featuredImage": "Featured Image",
+      "imagePlaceholder": "Image URL",
+      "tags": "Tags",
+      "tagsPlaceholder": "Tags separated by commas",
+      "readTime": "Read Time (minutes)",
+      "featured": "Featured Post",
+      "published": "Published",
+      "create": "Create Post",
+      "update": "Update Post",
+      "updated": "Post updated successfully!",
+      "created": "Post created successfully!",
+      "required": "All required fields must be filled"
+    },
     "categories": {
       "anxiety": "Anxiety",
       "depression": "Depression", 
       "relationships": "Relationships",
       "selfCare": "Self Care",
-      "therapy": "Therapy"
+      "therapy": "Therapy",
+      "stress": "Stress",
+      "general": "General"
     }
   },
   "doctor": {
@@ -384,6 +411,16 @@
       "blog": "Manage Blog",
       "settings": "Settings"
     },
+    "blog": {
+      "title": "Blog Management",
+      "category": "Category",
+      "status": "Status",
+      "views": "Views",
+      "publishedAt": "Published",
+      "actions": "Actions",
+      "published": "Published",
+      "draft": "Draft"
+    },
     "bookings": {
       "title": "All Bookings",
       "user": "User",
@@ -422,7 +459,9 @@
     "noData": "No data available",
     "confirm": "Are you sure?",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "accessDenied": "Access Denied",
+    "adminRequired": "You need admin privileges to access this page."
   },
   "language": {
     "en": "English",

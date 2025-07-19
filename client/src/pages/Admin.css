@@ -194,8 +194,88 @@
 
 .appointments-section,
 .contacts-section,
-.faqs-section {
+.faqs-section,
+.blog-section {
   padding: 2rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.8rem;
+}
+
+.add-blog-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+}
+
+.add-blog-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(39, 174, 96, 0.4);
+  color: white;
+}
+
+.blog-posts-table {
+  overflow-x: auto;
+}
+
+.blog-posts-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.blog-posts-table th,
+.blog-posts-table td {
+  padding: 1rem;
+  text-align: right;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.blog-posts-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.blog-posts-table tr:hover {
+  background: #f8f9fa;
+}
+
+.status.published {
+  background: #d4edda;
+  color: #155724;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status.draft {
+  background: #fff3cd;
+  color: #856404;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .appointments-section h3,
@@ -425,9 +505,29 @@
     flex-direction: column;
   }
 
+  .section-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .add-blog-btn {
+    justify-content: center;
+  }
+  
+  .blog-posts-table {
+    font-size: 0.9rem;
+  }
+  
+  .blog-posts-table th,
+  .blog-posts-table td {
+    padding: 0.75rem 0.5rem;
+  }
+  
   .appointments-section,
   .contacts-section,
-  .faqs-section {
+  .faqs-section,
+  .blog-section {
     padding: 1.5rem;
   }
 }

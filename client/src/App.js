@@ -15,6 +15,7 @@ import FAQ from './pages/FAQ';
 import Admin from './pages/Admin';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import BlogPostForm from './components/BlogPostForm';
 import Loading from './components/Loading';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
@@ -51,15 +52,31 @@ function App() {
                   } 
                 />
                 
-                {/* Admin Only Routes - Admin Users Only */}
-                <Route 
-                  path="/admin" 
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <Admin />
-                    </ProtectedRoute>
-                  } 
-                />
+                                       {/* Admin Only Routes - Admin Users Only */}
+                       <Route 
+                         path="/admin" 
+                         element={
+                           <ProtectedRoute requireAdmin={true}>
+                             <Admin />
+                           </ProtectedRoute>
+                         } 
+                       />
+                       <Route 
+                         path="/admin/blog/new" 
+                         element={
+                           <ProtectedRoute requireAdmin={true}>
+                             <BlogPostForm />
+                           </ProtectedRoute>
+                         } 
+                       />
+                       <Route 
+                         path="/admin/blog/edit/:id" 
+                         element={
+                           <ProtectedRoute requireAdmin={true}>
+                             <BlogPostForm />
+                           </ProtectedRoute>
+                         } 
+                       />
               </Routes>
             </Suspense>
           </main>

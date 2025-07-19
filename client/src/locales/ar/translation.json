@@ -268,13 +268,40 @@
     "readMore": "اقرأ المزيد",
     "backToBlog": "العودة للمدونة",
     "addPost": "إضافة مقال جديد",
+    "searchPlaceholder": "ابحث في المقالات...",
     "noArticles": "لا توجد مقالات متاحة.",
+    "form": {
+      "createTitle": "إنشاء مقال جديد",
+      "editTitle": "تعديل المقال",
+      "title": "عنوان المقال",
+      "titlePlaceholder": "أدخل عنوان المقال",
+      "category": "الفئة",
+      "selectCategory": "اختر الفئة",
+      "excerpt": "ملخص المقال",
+      "excerptPlaceholder": "أدخل ملخص المقال (حد أقصى 200 حرف)",
+      "content": "محتوى المقال",
+      "contentPlaceholder": "أدخل محتوى المقال",
+      "featuredImage": "الصورة الرئيسية",
+      "imagePlaceholder": "رابط الصورة",
+      "tags": "العلامات",
+      "tagsPlaceholder": "علامات مفصولة بفواصل",
+      "readTime": "وقت القراءة (دقائق)",
+      "featured": "مقال مميز",
+      "published": "منشور",
+      "create": "إنشاء المقال",
+      "update": "تحديث المقال",
+      "updated": "تم تحديث المقال بنجاح!",
+      "created": "تم إنشاء المقال بنجاح!",
+      "required": "جميع الحقول المطلوبة يجب ملؤها"
+    },
     "categories": {
       "anxiety": "القلق",
       "depression": "الاكتئاب",
       "relationships": "العلاقات",
       "selfCare": "العناية بالنفس",
-      "therapy": "العلاج النفسي"
+      "therapy": "العلاج النفسي",
+      "stress": "الضغوط النفسية",
+      "general": "عام"
     }
   },
   "doctor": {
@@ -384,6 +411,16 @@
       "blog": "إدارة المدونة",
       "settings": "الإعدادات"
     },
+    "blog": {
+      "title": "إدارة المدونة",
+      "category": "الفئة",
+      "status": "الحالة",
+      "views": "المشاهدات",
+      "publishedAt": "تاريخ النشر",
+      "actions": "الإجراءات",
+      "published": "منشور",
+      "draft": "مسودة"
+    },
     "bookings": {
       "title": "جميع الحجوزات",
       "user": "المستخدم",
@@ -422,7 +459,9 @@
     "noData": "لا توجد بيانات",
     "confirm": "هل أنت متأكد؟",
     "yes": "نعم",
-    "no": "لا"
+    "no": "لا",
+    "accessDenied": "تم رفض الوصول",
+    "adminRequired": "تحتاج صلاحيات المدير للوصول إلى هذه الصفحة."
   },
   "language": {
     "en": "English",
