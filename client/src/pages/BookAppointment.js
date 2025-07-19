@@ -27,14 +27,15 @@ const BookAppointment = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
 
   const currentLanguage = i18n.language;
 
   // Redirect if not authenticated
   useEffect(() => {
     if (!isAuthenticated()) {
-      navigate('/login', { 
-        state: { from: location },
+      navigate('/signup', { 
+        state: { from: location, redirectToBooking: true },
         replace: true 
       });
     }
@@ -44,8 +45,14 @@ const BookAppointment = () => {
   useEffect(() => {
     if (isAuthenticated()) {
       fetchUserBookings();
+      
+      // Show welcome message if user just signed up/logged in
+      if (location.state?.fromSignup || location.state?.fromLogin) {
+        setShowWelcomeMessage(true);
+        setTimeout(() => setShowWelcomeMessage(false), 5000);
+      }
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, location.state]);
 
   // Fetch available times when date changes
   useEffect(() => {
@@ -155,13 +162,26 @@ const BookAppointment = () => {
     return (
       <div className="booking-page">
         <div className="login-required">
-          <h2>{t('booking.loginRequired')}</h2>
-          <button 
-            onClick={() => navigate('/login')}
-            className="login-button"
-          >
-            {t('booking.loginButton')}
-          </button>
+          <h2>{t('booking.signupRequired') || 'يرجى التسجيل أولاً للحجز'}</h2>
+          <p>{t('booking.signupMessage') || 'يجب عليك إنشاء حساب جديد للوصول إلى صفحة الحجز'}</p>
+          <div className="auth-buttons">
+            <button 
+              onClick={() => navigate('/signup', { 
+                state: { from: location, redirectToBooking: true }
+              })}
+              className="signup-button"
+            >
+              {t('booking.signupButton') || 'تسجيل جديد'}
+            </button>
+            <button 
+              onClick={() => navigate('/login', { 
+                state: { from: location, redirectToBooking: true }
+              })}
+              className="login-button"
+            >
+              {t('booking.loginButton') || 'تسجيل دخول'}
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -182,6 +202,12 @@ const BookAppointment = () => {
             {error && (
               <div className="error-message">
                 {error}
+              </div>
+            )}
+
+            {showWelcomeMessage && (
+              <div className="welcome-message">
+                {t('booking.welcomeMessage') || 'مرحباً بك! يمكنك الآن حجز موعدك'}
               </div>
             )}
 

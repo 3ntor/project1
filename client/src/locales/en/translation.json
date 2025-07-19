@@ -33,6 +33,7 @@
       "noAccount": "Don't have an account?",
       "signUp": "Sign Up",
       "forgotPassword": "Forgot Password?",
+      "bookingRedirect": "After login, you will be redirected to the booking page",
       "errors": {
         "required": "Please enter email and password",
         "invalid": "Invalid email or password"
@@ -47,6 +48,7 @@
       "submit": "Create Account",
       "haveAccount": "Already have an account?",
       "login": "Login",
+      "bookingRedirect": "After registration, you will be redirected to the booking page",
       "errors": {
         "required": "All fields are required",
         "emailExists": "Email already exists"
@@ -137,6 +139,10 @@
         "Confidential and supportive environment"
       ]
     },
+    "individualTherapy": "Individual Therapy",
+    "couplesTherapy": "Couples Therapy",
+    "familyTherapy": "Family Therapy",
+    "groupTherapy": "Group Therapy",
     "couples": {
       "name": "Couples Therapy", 
       "description": "Specialized therapy to help couples improve communication, resolve conflicts, and strengthen their emotional connection and relationship satisfaction.",
@@ -226,9 +232,13 @@
   },
   "booking": {
     "title": "Book Your Appointment",
-    "subtitle": "Schedule your session with our experienced therapists. Please login first to book an appointment.",
+    "subtitle": "Schedule your session with our experienced therapists. Please sign up first to book an appointment.",
     "loginRequired": "Please login to book an appointment",
     "loginButton": "Login Now",
+    "signupRequired": "Please sign up to book an appointment",
+    "signupMessage": "You need to create a new account to access the booking page",
+    "signupButton": "Sign Up Now",
+    "welcomeMessage": "Welcome! You can now book your appointment",
     "form": {
       "name": "Full Name",
       "email": "Email Address", 
@@ -262,13 +272,40 @@
     "readMore": "Read More",
     "backToBlog": "Back to Blog",
     "addPost": "Add New Post",
+    "searchPlaceholder": "Search articles...",
     "noArticles": "No blog articles available.",
+    "form": {
+      "createTitle": "Create New Blog Post",
+      "editTitle": "Edit Blog Post",
+      "title": "Post Title",
+      "titlePlaceholder": "Enter post title",
+      "category": "Category",
+      "selectCategory": "Select Category",
+      "excerpt": "Excerpt",
+      "excerptPlaceholder": "Enter post excerpt (max 200 characters)",
+      "content": "Content",
+      "contentPlaceholder": "Enter post content",
+      "featuredImage": "Featured Image",
+      "imagePlaceholder": "Image URL",
+      "tags": "Tags",
+      "tagsPlaceholder": "Tags separated by commas",
+      "readTime": "Read Time (minutes)",
+      "featured": "Featured Post",
+      "published": "Published",
+      "create": "Create Post",
+      "update": "Update Post",
+      "updated": "Post updated successfully!",
+      "created": "Post created successfully!",
+      "required": "All required fields must be filled"
+    },
     "categories": {
       "anxiety": "Anxiety",
       "depression": "Depression", 
       "relationships": "Relationships",
       "selfCare": "Self Care",
-      "therapy": "Therapy"
+      "therapy": "Therapy",
+      "stress": "Stress",
+      "general": "General"
     }
   },
   "doctor": {
@@ -365,12 +402,12 @@
   },
   "admin": {
     "title": "Admin Dashboard",
-    "welcome": "Welcome to Admin Panel",
-    "stats": {
-      "totalUsers": "Total Users",
-      "totalBookings": "Total Bookings", 
-      "totalPosts": "Blog Posts",
-      "pendingBookings": "Pending Bookings"
+    "welcome": "Welcome to the admin panel. Manage your website content and users.",
+    "dashboard": {
+      "title": "Dashboard Statistics",
+      "recentActivity": "Recent Activity",
+      "recentBookings": "Recent bookings will appear here",
+      "noRecentActivity": "No recent activity"
     },
     "sections": {
       "users": "Manage Users",
@@ -378,24 +415,56 @@
       "blog": "Manage Blog",
       "settings": "Settings"
     },
-    "bookings": {
-      "title": "All Bookings",
-      "user": "User",
-      "service": "Service",
-      "date": "Date",
-      "time": "Time", 
-      "status": "Status",
-      "actions": "Actions",
-      "confirm": "Confirm",
-      "cancel": "Cancel"
+    "stats": {
+      "totalUsers": "Total Users",
+      "totalBookings": "Total Bookings",
+      "pendingBookings": "Pending Bookings",
+      "totalPosts": "Total Posts",
+      "registeredUsers": "Registered Users",
+      "totalAppointments": "Total Appointments",
+      "pendingAppointments": "Pending Appointments",
+      "blogPosts": "Blog Posts"
     },
     "users": {
-      "title": "All Users",
+      "title": "User Management",
       "name": "Name",
       "email": "Email",
       "phone": "Phone",
       "joinDate": "Join Date",
-      "actions": "Actions"
+      "totalBookings": "Total Bookings",
+      "actions": "Actions",
+      "searchPlaceholder": "Search users by name, email, or phone...",
+      "noUsers": "No users found"
+    },
+    "bookings": {
+      "title": "Booking Management",
+      "user": "User",
+      "service": "Service",
+      "date": "Date",
+      "time": "Time",
+      "status": "Status",
+      "actions": "Actions",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "searchPlaceholder": "Search bookings...",
+      "allStatuses": "All Statuses",
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "allServices": "All Services",
+      "noBookings": "No bookings found",
+      "deleted": "Booking deleted successfully"
+    },
+    "blog": {
+      "title": "Blog Management",
+      "category": "Category",
+      "status": "Status",
+      "views": "Views",
+      "publishedAt": "Published",
+      "actions": "Actions",
+      "published": "Published",
+      "draft": "Draft",
+      "deleted": "Blog post deleted successfully"
     }
   },
   "common": {
@@ -416,7 +485,9 @@
     "noData": "No data available",
     "confirm": "Are you sure?",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "accessDenied": "Access Denied",
+    "adminRequired": "You need admin privileges to access this page."
   },
   "language": {
     "en": "English",

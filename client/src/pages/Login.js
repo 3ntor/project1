@@ -55,13 +55,25 @@ const Login = () => {
         if (result.isAdmin) {
           navigate('/admin');
         } else {
-          // Check if there's a selected service to pass to booking page
+          // Check if user should be redirected to booking page
+          const shouldRedirectToBooking = location.state?.redirectToBooking;
           const from = location.state?.from?.pathname || '/';
           const selectedService = location.state?.selectedService;
           
-          if (from === '/booking' && selectedService) {
+          if (shouldRedirectToBooking && from === '/booking') {
             navigate('/booking', { 
-              state: { selectedService },
+              state: { 
+                selectedService,
+                fromLogin: true
+              },
+              replace: true 
+            });
+          } else if (from === '/booking' && selectedService) {
+            navigate('/booking', { 
+              state: { 
+                selectedService,
+                fromLogin: true
+              },
               replace: true 
             });
           } else {
@@ -85,6 +97,11 @@ const Login = () => {
         <div className="login-card">
           <div className="login-header">
             <h2>{t('auth.login.title')}</h2>
+            {location.state?.redirectToBooking && (
+              <p className="redirect-message">
+                {t('auth.login.bookingRedirect') || 'بعد تسجيل الدخول، سيتم توجيهك إلى صفحة الحجز'}
+              </p>
+            )}
           </div>
 
           {error && (

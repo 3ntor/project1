@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaCalendar, FaClock, FaEye, FaHeart, FaArrowRight, FaSearch } from 'react-icons/fa';
+import { FaCalendar, FaClock, FaEye, FaHeart, FaArrowRight, FaSearch, FaPlus } from 'react-icons/fa';
+import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import './Blog.css';
 
 const Blog = () => {
+  const { t, i18n } = useTranslation();
+  const { isAuthenticated, isAdminUser } = useAuth();
   const [posts, setPosts] = useState([]);
   const [featuredPosts, setFeaturedPosts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -13,6 +17,8 @@ const Blog = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+
+  const currentLanguage = i18n.language;
 
   useEffect(() => {
     loadData();
@@ -232,16 +238,26 @@ const Blog = () => {
         <div className="container">
           {/* Filters and Search */}
           <div className="blog-filters">
-            <div className="search-box">
-              <input
-                type="text"
-                placeholder="ابحث في المقالات..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <button onClick={handleSearch}>
-                <FaSearch />
-              </button>
+            <div className="filters-header">
+              <div className="search-box">
+                <input
+                  type="text"
+                  placeholder={t('blog.searchPlaceholder') || "ابحث في المقالات..."}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button onClick={handleSearch}>
+                  <FaSearch />
+                </button>
+              </div>
+              
+              {/* Add Blog Post Button - Admin Only */}
+              {isAuthenticated() && isAdminUser() && (
+                <Link to="/admin/blog/new" className="add-blog-btn">
+                  <FaPlus />
+                  {t('blog.addPost') || 'إضافة مقال جديد'}
+                </Link>
+              )}
             </div>
             
             <div className="category-filters">

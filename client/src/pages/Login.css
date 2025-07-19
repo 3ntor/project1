@@ -32,6 +32,17 @@
   margin: 0;
 }
 
+.redirect-message {
+  color: #667eea;
+  font-size: 14px;
+  margin-top: 10px;
+  font-style: italic;
+  background: #f8f9ff;
+  padding: 10px;
+  border-radius: 6px;
+  border-left: 3px solid #667eea;
+}
+
 .error-message {
   background: #fee;
   border: 1px solid #fcc;
@@ -142,6 +153,11 @@
 
 .login-page.rtl .login-header h2 {
   font-family: 'Arial', sans-serif;
+}
+
+.login-page.rtl .redirect-message {
+  border-left: none;
+  border-right: 3px solid #667eea;
 }
 
 /* Mobile Responsive */
