@@ -59,12 +59,14 @@ const Login = () => {
           const shouldRedirectToBooking = location.state?.redirectToBooking;
           const from = location.state?.from?.pathname || '/';
           const selectedService = location.state?.selectedService;
+          const bookingData = location.state?.bookingData;
           
           if (shouldRedirectToBooking && from === '/booking') {
             navigate('/booking', { 
               state: { 
                 selectedService,
-                fromLogin: true
+                fromLogin: true,
+                bookingData
               },
               replace: true 
             });
@@ -72,7 +74,8 @@ const Login = () => {
             navigate('/booking', { 
               state: { 
                 selectedService,
-                fromLogin: true
+                fromLogin: true,
+                bookingData
               },
               replace: true 
             });

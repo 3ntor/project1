@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const Admin = require('./models/Admin');
+const User = require('./models/User');
 
-mongoose.connect('mongodb+srv://ahmed:ahmed123@project.qemt8bn.mongodb.net/?retryWrites=true&w=majority&appName=project', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nafsyetak-clinic', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -11,18 +11,24 @@ mongoose.connect('mongodb+srv://ahmed:ahmed123@project.qemt8bn.mongodb.net/?retr
   
   // بيانات الحساب الإداري الثابت
   const adminData = {
-    username: 'admin',
-    password: 'admin123',
+    name: 'Administrator',
+    email: process.env.ADMIN_EMAIL || 'admin@nafsyetak.com',
+    password: process.env.ADMIN_PASSWORD || 'admin123',
+    phone: '+20 123 456 7890',
     role: 'admin'
   };
 
-  // تشفير كلمة المرور
-  bcrypt.hash(adminData.password, 10)
-    .then(hashedPassword => {
-      adminData.password = hashedPassword;
+  // التحقق من وجود المدير
+  User.findOne({ email: adminData.email, role: 'admin' })
+    .then(existingAdmin => {
+      if (existingAdmin) {
+        console.log('Admin account already exists');
+        mongoose.disconnect();
+        return;
+      }
 
       // إنشاء حساب المدير
-      const admin = new Admin(adminData);
+      const admin = new User(adminData);
       return admin.save();
     })
     .then(() => {

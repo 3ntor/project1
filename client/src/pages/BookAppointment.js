@@ -31,17 +31,9 @@ const BookAppointment = () => {
 
   const currentLanguage = i18n.language;
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      navigate('/signup', { 
-        state: { from: location, redirectToBooking: true },
-        replace: true 
-      });
-    }
-  }, [isAuthenticated, navigate, location]);
+  // No redirect - allow everyone to see the page
 
-  // Fetch user bookings
+  // Fetch user bookings and handle booking data from login
   useEffect(() => {
     if (isAuthenticated()) {
       fetchUserBookings();
@@ -50,6 +42,14 @@ const BookAppointment = () => {
       if (location.state?.fromSignup || location.state?.fromLogin) {
         setShowWelcomeMessage(true);
         setTimeout(() => setShowWelcomeMessage(false), 5000);
+      }
+      
+      // Load booking data if coming from login
+      if (location.state?.bookingData) {
+        setFormData(prevData => ({
+          ...prevData,
+          ...location.state.bookingData
+        }));
       }
     }
   }, [isAuthenticated, location.state]);
@@ -100,6 +100,22 @@ const BookAppointment = () => {
     if (!formData.name || !formData.email || !formData.phone || !formData.service || !formData.date || !formData.time) {
       setError(t('booking.form.required') || 'جميع الحقول مطلوبة');
       setLoading(false);
+      return;
+    }
+
+    // Check if user is authenticated
+    if (!isAuthenticated()) {
+      setError('يجب إنشاء حساب أولاً لإتمام الحجز');
+      setLoading(false);
+      // Redirect to signup with booking data
+      navigate('/signup', { 
+        state: { 
+          from: location, 
+          redirectToBooking: true,
+          bookingData: formData
+        },
+        replace: true 
+      });
       return;
     }
 
@@ -158,34 +174,7 @@ const BookAppointment = () => {
     return `${displayHour}:${minutes} ${ampm}`;
   };
 
-  if (!isAuthenticated()) {
-    return (
-      <div className="booking-page">
-        <div className="login-required">
-          <h2>{t('booking.signupRequired') || 'يرجى التسجيل أولاً للحجز'}</h2>
-          <p>{t('booking.signupMessage') || 'يجب عليك إنشاء حساب جديد للوصول إلى صفحة الحجز'}</p>
-          <div className="auth-buttons">
-            <button 
-              onClick={() => navigate('/signup', { 
-                state: { from: location, redirectToBooking: true }
-              })}
-              className="signup-button"
-            >
-              {t('booking.signupButton') || 'تسجيل جديد'}
-            </button>
-            <button 
-              onClick={() => navigate('/login', { 
-                state: { from: location, redirectToBooking: true }
-              })}
-              className="login-button"
-            >
-              {t('booking.loginButton') || 'تسجيل دخول'}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Show booking form for everyone, but require login for actual booking
 
   return (
     <div className={`booking-page ${currentLanguage === 'ar' ? 'rtl' : 'ltr'}`}>
@@ -331,7 +320,8 @@ const BookAppointment = () => {
                 className="booking-submit-button"
                 disabled={loading}
               >
-                {loading ? t('common.loading') : t('booking.form.submit')}
+                {loading ? t('common.loading') : 
+                 isAuthenticated() ? t('booking.form.submit') : 'إنشاء حساب للحجز'}
               </button>
             </form>
           </div>

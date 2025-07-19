@@ -19,6 +19,7 @@ import BlogPostForm from './components/BlogPostForm';
 import Loading from './components/Loading';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import TestPage from './pages/TestPage';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               <Routes>
                 {/* Public Routes - Accessible to all users (Guest, Registered, Admin) */}
                 <Route path="/" element={<Home />} />
+                <Route path="/test" element={<TestPage />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/doctor" element={<DoctorProfile />} />
@@ -42,15 +44,8 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
                 
-                {/* Protected Routes - Registered Users Only (NOT Guests) */}
-                <Route 
-                  path="/booking" 
-                  element={
-                    <ProtectedRoute requireAuth={true}>
-                      <BookAppointment />
-                    </ProtectedRoute>
-                  } 
-                />
+                {/* Booking Route - Accessible to all users, but booking requires authentication */}
+                <Route path="/booking" element={<BookAppointment />} />
                 
                                        {/* Admin Only Routes - Admin Users Only */}
                        <Route 
