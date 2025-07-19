@@ -10,7 +10,7 @@ router.post('/', auth, async (req, res) => {
     const { name, email, phone, service, date, time, notes } = req.body;
 
     // التحقق من وجود المستخدم
-    const user = await User.findById(req.user.userId);
+    const user = req.user; // User is already fetched in auth middleware
     if (!user) {
       return res.status(404).json({ message: 'المستخدم غير موجود' });
     }
@@ -58,7 +58,7 @@ router.post('/', auth, async (req, res) => {
 // جلب حجوزات المستخدم الحالي فقط
 router.get('/my-bookings', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId);
+    const user = req.user; // User is already fetched in auth middleware
     if (!user) {
       return res.status(404).json({ message: 'المستخدم غير موجود' });
     }
@@ -118,7 +118,7 @@ router.patch('/:id', auth, async (req, res) => {
     const { status, notes } = req.body;
     const bookingId = req.params.id;
 
-    const user = await User.findById(req.user.userId);
+    const user = req.user; // User is already fetched in auth middleware
     if (!user) {
       return res.status(404).json({ message: 'المستخدم غير موجود' });
     }
@@ -159,7 +159,7 @@ router.delete('/:id', auth, async (req, res) => {
   try {
     const bookingId = req.params.id;
 
-    const user = await User.findById(req.user.userId);
+    const user = req.user; // User is already fetched in auth middleware
     if (!user) {
       return res.status(404).json({ message: 'المستخدم غير موجود' });
     }

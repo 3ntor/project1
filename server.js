@@ -20,12 +20,11 @@ const createAdminIfNotExists = async () => {
     
     if (!existingAdmin) {
       console.log('Creating admin account...');
-      const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'admin123', 10);
       
       const adminData = {
         name: 'Administrator',
         email: process.env.ADMIN_EMAIL || 'admin@nafsyetak.com',
-        password: hashedPassword,
+        password: process.env.ADMIN_PASSWORD || 'admin123', // Let the User model hash this
         phone: '+20 123 456 7890',
         role: 'admin'
       };
