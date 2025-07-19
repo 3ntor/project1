@@ -33,6 +33,7 @@
       "noAccount": "Don't have an account?",
       "signUp": "Sign Up",
       "forgotPassword": "Forgot Password?",
+      "bookingRedirect": "After login, you will be redirected to the booking page",
       "errors": {
         "required": "Please enter email and password",
         "invalid": "Invalid email or password"
@@ -47,6 +48,7 @@
       "submit": "Create Account",
       "haveAccount": "Already have an account?",
       "login": "Login",
+      "bookingRedirect": "After registration, you will be redirected to the booking page",
       "errors": {
         "required": "All fields are required",
         "emailExists": "Email already exists"
@@ -226,9 +228,13 @@
   },
   "booking": {
     "title": "Book Your Appointment",
-    "subtitle": "Schedule your session with our experienced therapists. Please login first to book an appointment.",
+    "subtitle": "Schedule your session with our experienced therapists. Please sign up first to book an appointment.",
     "loginRequired": "Please login to book an appointment",
     "loginButton": "Login Now",
+    "signupRequired": "Please sign up to book an appointment",
+    "signupMessage": "You need to create a new account to access the booking page",
+    "signupButton": "Sign Up Now",
+    "welcomeMessage": "Welcome! You can now book your appointment",
     "form": {
       "name": "Full Name",
       "email": "Email Address", 

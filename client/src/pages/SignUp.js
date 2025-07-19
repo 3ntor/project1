@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import './SignUp.css';
@@ -8,6 +8,7 @@ const SignUp = () => {
   const { t, i18n } = useTranslation();
   const { signup, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [formData, setFormData] = useState({
     name: '',
@@ -23,9 +24,20 @@ const SignUp = () => {
   // Redirect if already logged in
   useEffect(() => {
     if (isAuthenticated()) {
-      navigate('/');
+      // Check if user should be redirected to booking page
+      const shouldRedirectToBooking = location.state?.redirectToBooking;
+      const from = location.state?.from?.pathname;
+      
+      if (shouldRedirectToBooking && from === '/booking') {
+        navigate('/booking', { 
+          state: { selectedService: location.state?.selectedService },
+          replace: true 
+        });
+      } else {
+        navigate('/');
+      }
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, location]);
 
   const handleChange = (e) => {
     setFormData({
@@ -57,7 +69,21 @@ const SignUp = () => {
       const result = await signup(formData);
       
       if (result.success) {
-        navigate('/');
+        // Check if user should be redirected to booking page
+        const shouldRedirectToBooking = location.state?.redirectToBooking;
+        const from = location.state?.from?.pathname;
+        
+        if (shouldRedirectToBooking && from === '/booking') {
+          navigate('/booking', { 
+            state: { 
+              selectedService: location.state?.selectedService,
+              fromSignup: true
+            },
+            replace: true 
+          });
+        } else {
+          navigate('/');
+        }
       } else {
         setError(result.message || 'حدث خطأ أثناء إنشاء الحساب');
       }
@@ -75,6 +101,11 @@ const SignUp = () => {
         <div className="signup-card">
           <div className="signup-header">
             <h2>{t('auth.signup.title')}</h2>
+            {location.state?.redirectToBooking && (
+              <p className="redirect-message">
+                {t('auth.signup.bookingRedirect') || 'بعد التسجيل، سيتم توجيهك إلى صفحة الحجز'}
+              </p>
+            )}
           </div>
 
           {error && (
