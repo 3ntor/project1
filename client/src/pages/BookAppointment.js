@@ -28,6 +28,7 @@ const BookAppointment = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
+  const [newBooking, setNewBooking] = useState(null);
 
   const currentLanguage = i18n.language;
 
@@ -123,7 +124,11 @@ const BookAppointment = () => {
       const response = await axios.post('/api/bookings', formData);
       
       if (response.data.success) {
-        setSuccess(t('booking.success'));
+        setSuccess(t('booking.success') || 'تم حجز الموعد بنجاح!');
+        
+        // Store the new booking for highlighting
+        setNewBooking(response.data.booking);
+        
         // Reset form
         setFormData({
           ...formData,
@@ -131,8 +136,22 @@ const BookAppointment = () => {
           time: '',
           notes: ''
         });
-        // Refresh bookings
-        fetchUserBookings();
+        
+        // Refresh bookings immediately
+        await fetchUserBookings();
+        
+        // Scroll to bookings section to show the new booking
+        setTimeout(() => {
+          const bookingsSection = document.querySelector('.my-bookings-section');
+          if (bookingsSection) {
+            bookingsSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 500);
+        
+        // Clear new booking highlight after 3 seconds
+        setTimeout(() => {
+          setNewBooking(null);
+        }, 3000);
       }
     } catch (error) {
       console.error('Booking error:', error);
@@ -334,7 +353,13 @@ const BookAppointment = () => {
             ) : (
               <div className="bookings-list">
                 {userBookings.map(booking => (
-                  <div key={booking._id} className="booking-card">
+                  <div 
+                    key={booking._id} 
+                    className={`booking-card ${newBooking && newBooking._id === booking._id ? 'new-booking' : ''}`}
+                  >
+                    {newBooking && newBooking._id === booking._id && (
+                      <div className="new-booking-badge">جديد</div>
+                    )}
                     <div className="booking-info">
                       <h3>{services.find(s => s.id === booking.service)?.name}</h3>
                       <p><strong>التاريخ:</strong> {formatDate(booking.date)}</p>

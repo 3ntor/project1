@@ -97,12 +97,25 @@
 }
 
 .success-message {
-  background: #d4edda;
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
   color: #155724;
-  padding: 15px;
+  padding: 15px 20px;
   border-radius: 8px;
   margin-bottom: 20px;
-  border: 1px solid #c3e6cb;
+  border-left: 4px solid #28a745;
+  font-weight: 600;
+  animation: successSlideIn 0.5s ease-out;
+}
+
+@keyframes successSlideIn {
+  0% { 
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .error-message {
@@ -188,6 +201,39 @@
 .booking-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.booking-card.new-booking {
+  border-left: 4px solid #27ae60;
+  background: linear-gradient(135deg, #f8fff9 0%, #f0fff4 100%);
+  animation: newBookingPulse 2s ease-in-out;
+  position: relative;
+}
+
+.new-booking-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(39, 174, 96, 0.3);
+  animation: badgeBounce 0.6s ease-out;
+}
+
+@keyframes newBookingPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes badgeBounce {
+  0% { transform: scale(0) rotate(-10deg); }
+  50% { transform: scale(1.2) rotate(5deg); }
+  100% { transform: scale(1) rotate(0deg); }
 }
 
 .booking-info h3 {
@@ -303,6 +349,15 @@
 .rtl .booking-card {
   border-left: none;
   border-right: 4px solid #667eea;
+}
+
+.rtl .booking-card.new-booking {
+  border-right: 4px solid #27ae60;
+}
+
+.rtl .new-booking-badge {
+  right: auto;
+  left: -10px;
 }
 
 .rtl .form-group label {
